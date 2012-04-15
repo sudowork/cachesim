@@ -24,9 +24,10 @@ std::vector<std::string> util::splitLine(const std::string str, const char delim
 std::ostream& util::operator<< (std::ostream& out, const Cache& c)
 {
     out << "Cache Description" << std::endl;
-    out << "Cache-Size: " << c.getCacheSize() << std::endl;
+    out << "Cache-Size: " << c.getCacheSize() << " KB" << std::endl;
     out << "Associativity: " << c.getAssociativity() << "-way" << std::endl;
-    out << "Block-Size: " << c.getBlockSize() << std::endl;
+    out << "Block-Size: " << c.getBlockSize() << " B" << std::endl;
+    out << "# Blocks: " << c.getNumBlocks() << std::endl;
     out << "# Sets: " << c.getNumSets();
     return out;
 }

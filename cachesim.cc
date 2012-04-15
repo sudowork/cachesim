@@ -17,7 +17,7 @@ int main(int argc, const char * argv[])
     // Check for valid input
     if (argc < 5)
     {
-        std::cerr << "Invalid number of parameters.\n"
+        std::cout << "Invalid number of parameters.\n"
             "Run as `cachesim <filename> <cache-size> <associativity> <block-size>`" << std::endl;
         return 1;
     }
@@ -35,7 +35,7 @@ int main(int argc, const char * argv[])
         associativity = FromString<unsigned short>(argv[3]);
         blockSize = FromString<unsigned short>(argv[4]);
     } catch (int e) {
-        std::cerr << "Invalid Input: " << e << std::endl;
+        std::cout << "Invalid Input: " << e << std::endl;
     }
 
     // Create new cache (and load file upon construction)

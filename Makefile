@@ -1,4 +1,5 @@
 $(CXX) = g++ -g3 -gdwarf2
+CXX += -std=c++0x
 
 
 all: cachesim

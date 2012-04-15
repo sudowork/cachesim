@@ -20,8 +20,8 @@ const bool Cache::loadFile(const char* filename)
         _fs.open(filename);
         return true;
     } catch (int e) {
-        std::cerr << "Error (" << e << ") opening file `" << filename << "`" << std::endl;
-        throw 20;
+        std::cout << "Error (" << e << ") opening file `" << filename << "`" << std::endl;
+        return false;
     }
 }
 
@@ -33,7 +33,19 @@ void Cache::exec()
             std::string line;
             getline(_fs,line);
             if (line.size() > 0) {  // ignore blank lines
+                // Tokenize command
                 std::vector<std::string> cmd = util::splitLine(line, ' ');
+
+                // TODO command parser?
+                // parse instruction
+                std::string insn = cmd.at(0);
+                std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
+
+                if (insn.compare("store")) {
+
+                } else if (insn.compare("load")) {
+
+                }
             }
         }
     } else {
@@ -57,4 +69,8 @@ const unsigned short Cache::getBlockSize() const
 const unsigned short Cache::getNumSets() const
 {
     return this->_numSets;
+}
+const unsigned short Cache::getNumBlocks() const
+{
+    return this->_numBlocks;
 }

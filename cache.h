@@ -3,6 +3,10 @@
 
 #include <fstream>
 #include <ostream>
+#include <cinttypes>
+#include <unordered_map>
+
+#define BUSWIDTH 32
 
 class Cache
 {
@@ -11,8 +15,31 @@ class Cache
         const unsigned short _cacheSize,
               _associativity,
               _blockSize,
+              _numBlocks,
               _numSets;
         std::ifstream _fs;
+
+        typedef struct
+        {
+            /* --------------------------------
+             * |V|d|  TAG  |  SET  |  OFFSET  |
+             * --------------------------------
+             *  V (valid) = 1-bit
+             *  d (dirty) = 1-bit
+             *  TAG = BUSWIDTH-log2(numSets)-log2(blockSize)
+             *  SET = log2(numSets)
+             *  OFFSET = log2(blockSize)
+             */
+            char flags;  // V and d flags
+            uint32_t fields;
+        } Index;
+
+        typedef struct
+        {
+            char* data;
+        } Block;
+
+        std::unordered_map<uint32_t,Block> cacheMem;
 
     public:
         // Constructor/Destructor
@@ -22,7 +49,8 @@ class Cache
                 _cacheSize(cs),
                 _associativity(a),
                 _blockSize(bs),
-                _numSets(cs*1024/(bs*a)) // Calculate number of sets
+                _numBlocks(cs*1024/bs),
+                _numSets(_numBlocks/a) // Calculate number of sets
         {
         };
         ~Cache()
@@ -35,6 +63,7 @@ class Cache
         const unsigned short getCacheSize() const;
         const unsigned short getAssociativity() const;
         const unsigned short getBlockSize() const;
+        const unsigned short getNumBlocks() const;
         const unsigned short getNumSets() const;
 
         const bool loadFile();
