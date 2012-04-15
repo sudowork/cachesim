@@ -4,7 +4,7 @@
 #include <fstream>
 #include <ostream>
 #include <cstdint>
-//#include <unordered_map>
+#include <unordered_map>
 #include <list>
 #include <cmath>
 
@@ -15,6 +15,7 @@ class Cache
     private:
         const char * _filename;
         std::ifstream _fs;
+
         // Different parameters
         const unsigned short _cacheSize,
               _associativity,
@@ -28,6 +29,10 @@ class Cache
         const uint32_t OFF_BITMASK,
               TAG_BITMASK,
               SET_BITMASK;
+
+        // main memory
+        // TODO separate this out into its own class
+        std::unordered_map<int,char *> * mainMem;
 
         typedef struct
         {
@@ -45,6 +50,12 @@ class Cache
             uint32_t fields;
         } Index;
 
+        typedef struct
+        {
+            bool hit;
+            int value;
+        } CacheResult;
+
         /*typedef struct
         {
             char* data;
@@ -52,8 +63,19 @@ class Cache
 
         // array of lists (front of list = most recently used)
         std::list<Index> *sets;
-        char * cacheMem;
-        //std::unordered_map<uint32_t,Block> cacheMem;
+        char * cacheMem;    // Little endian
+        /*
+         * |   ...   |
+         * -----------
+         * |   MSB   |
+         * | BLOCK 1 |
+         * |   LSB   |
+         * -----------
+         * |   MSB   |
+         * | BLOCK 0 |
+         * |   LSB   |
+         * -----------
+         */
 
         void init();
 
@@ -74,7 +96,8 @@ class Cache
                 TAG_BITMASK((0xffffffff >> (OFFWIDTH + SETWIDTH)) << (OFFWIDTH + SETWIDTH)),
                 SET_BITMASK(~(0xffffffff & (OFF_BITMASK | TAG_BITMASK))),
                 sets(new std::list<Index>[_numSets]),
-                cacheMem(new char[cs*1024])
+                cacheMem(new char[cs*1024]),
+                mainMem(new std::unordered_map<int,char *>)
         {
             init();
         };
@@ -98,6 +121,9 @@ class Cache
         void exec();
         const bool store(unsigned int address, unsigned short accessSize, int value);
         const bool load(unsigned int address, unsigned short accessSize);
+        // TODO refactor store and load togther
+        // inCache()
+        // removeFromCache()
 
 
 };

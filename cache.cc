@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <list>
 #include <cstdint>
+#include <unordered_map>
 #include "util.h"
 #include "cache.h"
 
@@ -57,14 +58,18 @@ void Cache::exec()
                         ss = new std::istringstream(cmd[3]);
                         *ss >> std::hex >> value;
 
+                        // TODO change return to CacheReturn
                         if (store(address,accessSize,value)) {
-                            // TODO retrieve previous value??
                             std::cout << "store hit " << std::endl;
                         } else {
                             std::cout << "store miss" << std::endl;
                         }
-                    } else if (insn.compare("load")) {
-                        load(address,accessSize);
+                    } else if (insn.compare("load") == 0) {
+                        if (load(address,accessSize)) {
+                            std::cout << "load hit " << std::endl;
+                        } else {
+                            std::cout << "load miss" << std::endl;
+                        }
                     }
                 } catch (int e) {
                     std::cout << "Invalid tracefile command" << std::endl;
@@ -121,25 +126,107 @@ const bool Cache::store(unsigned int address, unsigned short accessSize, int val
     }
 
     // Remove current or last element
-    s.erase((hit) ? it : --it);
+    // and write-back
+    it = (hit) ? it : --it;
+    Index toRemove = *it;
+    if (toRemove.V && toRemove.d) {
+        int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
+        // Has been modified
+        // So retrieve from cacheMem and write-back
+        uint32_t cmoffset =
+            (((toRemove.fields & SET_BITMASK) >> OFFWIDTH)*_associativity);
+        char * retrieved;
+        std::copy(cacheMem+cmoffset,cacheMem+cmoffset+_blockSize,retrieved);
+
+        // overwrite previous data
+        std::pair<int,char *> p = std::make_pair(decodedTag,retrieved);
+        mainMem->insert(p);
+    }
+    s.erase(it);
 
     uint32_t set = si.fields & SET_BITMASK;
     uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
 
     // Process index
-    si.d = hit and si.V; // set dirty flag if already in cache and valid
+    si.d = hit && si.V; // set dirty flag if already in cache and valid
     si.V = true;
     si.fields = 0 + tag + set + offset;
 
     // push to front
     s.push_front(si);
 
-    return hit and si.V;
+    // write value to blocks in cacheMem
+    uint32_t absOffset =
+        (((si.fields & SET_BITMASK) >> OFFWIDTH)*_associativity)
+        + (si.fields & OFF_BITMASK);
+    for (int i = 0; i < accessSize; i++) {
+        int shamt = i*sizeof(char);
+        uint32_t mask = 0xff << shamt;
+        cacheMem[absOffset+i] = (value & mask) >> shamt;
+    }
+
+    return hit && si.V;
 }
 
 const bool Cache::load(unsigned int address, unsigned short accessSize)
 {
-    return false;
+    std::list<Index> &s = sets[address % _numSets];
+
+    // Get most significant bits
+    uint32_t tag = address & TAG_BITMASK;
+
+    Index si;
+    bool hit = false;
+
+    // Look for matching tag
+    std::list<Index>::iterator it;
+    for (it = s.begin(); it != s.end(); ++it) {
+        si = *it;    // Set to last iterator
+        // XOR to find match
+        if ((tag ^ (si.fields & TAG_BITMASK)) == 0) {
+            hit = true;
+            return hit;
+        }
+    }
+
+    // Remove current or last element
+    --it;
+    Index toRemove = *it;
+    if (toRemove.V && toRemove.d) {
+        int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
+        // Has been modified
+        // So retrieve from cacheMem and write-back
+        uint32_t cmoffset =
+            (((toRemove.fields & SET_BITMASK) >> OFFWIDTH)*_associativity);
+        char * retrieved;
+        std::copy(cacheMem+cmoffset,cacheMem+cmoffset+_blockSize,retrieved);
+
+        // overwrite previous data
+        std::pair<int,char *> p = std::make_pair(decodedTag,retrieved);
+        mainMem->insert(p);
+    }
+    s.erase(it);
+
+    uint32_t set = si.fields & SET_BITMASK;
+    uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
+
+    // Process index
+    si.d = hit && si.V; // set dirty flag if already in cache and valid
+    si.V = true;
+    si.fields = 0 + tag + set + offset;
+
+    // push to front
+    s.push_front(si);
+
+    // write value to blocks in cacheMem
+    uint32_t absOffset = ((si.fields & SET_BITMASK) >> OFFWIDTH)*_associativity;
+    int decodedTag = (si.fields & ~OFF_BITMASK) >> OFFWIDTH;
+    if (mainMem->count(decodedTag) > 0) {
+        char * retrieved = mainMem->at(decodedTag);
+        std::copy(retrieved,retrieved+_blockSize,cacheMem+absOffset);
+    }
+
+    return hit;
 }
 
 const unsigned short Cache::getCacheSize() const
