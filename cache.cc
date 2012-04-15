@@ -6,8 +6,8 @@
 #include <iterator>
 #include <algorithm>
 #include <cmath>
-#include "cache.h"
 #include "util.h"
+#include "cache.h"
 
 const bool Cache::loadFile()
 {
@@ -38,14 +38,25 @@ void Cache::exec()
                 std::vector<std::string> cmd = util::splitLine(line, ' ');
 
                 // TODO command parser?
-                // parse instruction
-                std::string insn = cmd[0];
-                std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
-                if (insn.compare("store")) {
+                // Extract common parameters
+                try {
+                    // parse instruction
+                    std::string insn = cmd[0];
+                    std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
-                } else if (insn.compare("load")) {
+                    int address = FromString<int>(cmd[1].c_str());
+                    unsigned short accessSize = FromString<unsigned short>(cmd[2].c_str());
 
+                    if (insn.compare("store") == 0) {
+                        int value = FromString<int>(cmd[3].c_str());
+                        store(address,accessSize,value);
+                    } else if (insn.compare("load")) {
+                        load(address,accessSize);
+                    }
+                } catch (int e) {
+                    std::cout << "Invalid tracefile command" << std::endl;
+                    return;
                 }
             }
         }
@@ -60,15 +71,30 @@ void Cache::initSets() {
         Index si;
         si.V = 0;
         si.d = 0;
+
         // Insert set number (offset past block-offset)
         // Calculate widths of each field
         unsigned short OFFWIDTH = log(_blockSize)/log(2);
         unsigned short SETWIDTH = log(_numSets)/log(2);
         unsigned short TAGWIDTH = BUSWIDTH-OFFWIDTH-SETWIDTH;
+
         // Bitmask so only SET can be modified (just in case)
         int BITMASK = ~(0xffffffff & (0x0 << OFFWIDTH + SETWIDTH));
         si.fields = (i << OFFWIDTH) & (BITMASK);    // shift and mask
+
+        // Add invalid slot to set's queue
+        sets[i].push(si);
     }
+}
+
+const bool Cache::store(int address, unsigned short accessSize, int value)
+{
+    return false;
+}
+
+const bool Cache::load(int address, unsigned short accessSize)
+{
+    return false;
 }
 
 const unsigned short Cache::getCacheSize() const
@@ -90,4 +116,13 @@ const unsigned short Cache::getNumSets() const
 const unsigned short Cache::getNumBlocks() const
 {
     return this->_numBlocks;
+}
+
+template<typename T>
+T FromString(const char * str)
+{
+    std::istringstream ss(str);
+    T ret;
+    ss >> ret;
+    return ret;
 }

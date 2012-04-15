@@ -13,7 +13,7 @@ std::vector<std::string> util::splitLine(const std::string str, const char delim
         last = i;
         i = str.find(delim,i+1);
         // Insert first non-empty token
-        if (i-last > 1) v.push_back(str.substr(last+1,i-last));
+        if (i-last > 1 || i == -1) v.push_back(str.substr(last+1,i-last-1));
         // break after hitting the end
         if (i == std::string::npos) break;
     }

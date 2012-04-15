@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <ostream>
+#include "cache.h"
 
 namespace util {
     std::vector<std::string> splitLine(const std::string str, const char delim);

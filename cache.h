@@ -77,7 +77,14 @@ class Cache
         const bool loadFile();
         const bool loadFile(const char * f);
         void exec();
+        const bool store(int address, unsigned short accessSize, int value);
+        const bool load(int address, unsigned short accessSize);
+
 
 };
+
+// For some reason, this wasn't letting me put it in the util namespace
+template <typename T>
+T FromString(const char * str);
 
 #endif

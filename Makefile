@@ -3,13 +3,13 @@ CXX += -std=c++0x
 
 
 all: cachesim
-.PHONY: cachesim cachesim.o cache.o util.o
+.PHONY: cachesim cache.o util.o cachesim.o
 
 debug: CXX += -DDEBUG -g
 debug: cachesim
 
-cachesim: cachesim.o cache.o util.o
-	$(CXX) -o cachesim cachesim.o cache.o util.o
+cachesim: util.o cache.o cachesim.o
+	$(CXX) -o cachesim cache.o util.o cachesim.o 
 
 cachesim.o:
 	$(CXX) -c cachesim.cc
