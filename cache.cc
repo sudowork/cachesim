@@ -5,6 +5,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include <cmath>
 #include "cache.h"
 #include "util.h"
 
@@ -38,7 +39,7 @@ void Cache::exec()
 
                 // TODO command parser?
                 // parse instruction
-                std::string insn = cmd.at(0);
+                std::string insn = cmd[0];
                 std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
                 if (insn.compare("store")) {
@@ -51,6 +52,22 @@ void Cache::exec()
     } else {
         std::cerr << "File not open" << std::endl;
         throw 21;   // File not open
+    }
+}
+
+void Cache::initSets() {
+    for (int i = 0; i < _numSets; i++) {
+        Index si;
+        si.V = 0;
+        si.d = 0;
+        // Insert set number (offset past block-offset)
+        // Calculate widths of each field
+        unsigned short OFFWIDTH = log(_blockSize)/log(2);
+        unsigned short SETWIDTH = log(_numSets)/log(2);
+        unsigned short TAGWIDTH = BUSWIDTH-OFFWIDTH-SETWIDTH;
+        // Bitmask so only SET can be modified (just in case)
+        int BITMASK = ~(0xffffffff & (0x0 << OFFWIDTH + SETWIDTH));
+        si.fields = (i << OFFWIDTH) & (BITMASK);    // shift and mask
     }
 }
 

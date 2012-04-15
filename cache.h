@@ -5,6 +5,7 @@
 #include <ostream>
 #include <cinttypes>
 #include <unordered_map>
+#include <queue>
 
 #define BUSWIDTH 32
 
@@ -30,7 +31,8 @@ class Cache
              *  SET = log2(numSets)
              *  OFFSET = log2(blockSize)
              */
-            char flags;  // V and d flags
+            bool V;
+            bool d;
             uint32_t fields;
         } Index;
 
@@ -39,7 +41,10 @@ class Cache
             char* data;
         } Block;
 
+        std::queue<Index> *sets;
         std::unordered_map<uint32_t,Block> cacheMem;
+
+        void initSets();
 
     public:
         // Constructor/Destructor
@@ -50,11 +55,14 @@ class Cache
                 _associativity(a),
                 _blockSize(bs),
                 _numBlocks(cs*1024/bs),
-                _numSets(_numBlocks/a) // Calculate number of sets
+                _numSets(_numBlocks/a), // Calculate number of sets
+                sets(new std::queue<Index>[_numSets])
         {
+            initSets();
         };
         ~Cache()
         {
+            delete[] sets;
             // Close file handler
             if (_fs.is_open()) _fs.close();
         };
