@@ -1,7 +1,7 @@
 cachesim
 ========
 
-A program designed to simulate a set-associative, LRU cache with a write-back and write-allocate write policy.
+A program designed to simulate a single-level, set-associative, LRU cache with a write-back and write-allocate write policy.
 
 Building
 --------
