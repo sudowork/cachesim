@@ -2,7 +2,7 @@
 #define CACHE_H
 
 #include <fstream>
-#include <vector>
+#include <ostream>
 
 class Cache
 {
@@ -22,7 +22,7 @@ class Cache
                 _cacheSize(cs),
                 _associativity(a),
                 _blockSize(bs),
-                _numSets(cs/(bs*a)) // Calculate number of sets
+                _numSets(cs*1024/(bs*a)) // Calculate number of sets
         {
         };
         ~Cache()
@@ -31,8 +31,14 @@ class Cache
             if (_fs.is_open()) _fs.close();
         };
 
-        bool loadFile();
-        bool loadFile(const char * f);
+        // getters
+        const unsigned short getCacheSize() const;
+        const unsigned short getAssociativity() const;
+        const unsigned short getBlockSize() const;
+        const unsigned short getNumSets() const;
+
+        const bool loadFile();
+        const bool loadFile(const char * f);
         void exec();
 
 };

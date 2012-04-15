@@ -6,11 +6,14 @@
 
 #include <iostream>
 #include <sstream>
-#include "cachesim.h"
 #include "cache.h"
+#include "util.h"
+#include "cachesim.h"
 
 int main(int argc, const char * argv[])
 {
+    using util::operator<<;
+
     // Check for valid input
     if (argc < 5)
     {
@@ -37,7 +40,10 @@ int main(int argc, const char * argv[])
 
     // Create new cache (and load file upon construction)
     Cache* c = new Cache(filename,cacheSize,associativity,blockSize);
+    std::cout << *c << std::endl;   // Prints description of cache
     c->loadFile();
+
+    std::cout << std::endl;
     // Execute stores and loads in tracefile
     c->exec();
 

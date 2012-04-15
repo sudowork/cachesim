@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <ostream>
 #include <sstream>
 #include <vector>
 #include <iterator>
@@ -7,12 +8,12 @@
 #include "cache.h"
 #include "util.h"
 
-bool Cache::loadFile()
+const bool Cache::loadFile()
 {
     return loadFile(_filename);
 }
 
-bool Cache::loadFile(const char* filename)
+const bool Cache::loadFile(const char* filename)
 {
     // Open file stream to read file
     try {
@@ -28,7 +29,6 @@ void Cache::exec()
 {
     // Ensure that file is open
     if (_fs.is_open()) {
-        std::cout << "Executing Contents of " << _filename << std::endl;
         while (_fs.good()) {
             std::string line;
             getline(_fs,line);
@@ -40,4 +40,21 @@ void Cache::exec()
         std::cerr << "File not open" << std::endl;
         throw 21;   // File not open
     }
+}
+
+const unsigned short Cache::getCacheSize() const
+{
+    return this->_cacheSize;
+}
+const unsigned short Cache::getAssociativity() const
+{
+    return this->_associativity;
+}
+const unsigned short Cache::getBlockSize() const
+{
+    return this->_blockSize;
+}
+const unsigned short Cache::getNumSets() const
+{
+    return this->_numSets;
 }

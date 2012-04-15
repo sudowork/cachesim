@@ -2,6 +2,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include "cache.h"
 #include "util.h"
 
 std::vector<std::string> util::splitLine(const std::string str, const char delim)
@@ -18,4 +19,14 @@ std::vector<std::string> util::splitLine(const std::string str, const char delim
     }
 
     return v;
+}
+
+std::ostream& util::operator<< (std::ostream& out, const Cache& c)
+{
+    out << "Cache Description" << std::endl;
+    out << "Cache-Size: " << c.getCacheSize() << std::endl;
+    out << "Associativity: " << c.getAssociativity() << "-way" << std::endl;
+    out << "Block-Size: " << c.getBlockSize() << std::endl;
+    out << "# Sets: " << c.getNumSets();
+    return out;
 }
