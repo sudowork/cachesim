@@ -5,7 +5,8 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
-#include <cmath>
+#include <list>
+#include <cstdint>
 #include "util.h"
 #include "cache.h"
 
@@ -45,12 +46,23 @@ void Cache::exec()
                     std::string insn = cmd[0];
                     std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
-                    unsigned int address = FromString<unsigned int>(cmd[1].c_str());
+                    std::istringstream* ss = new std::istringstream(cmd[1]);
+                    unsigned int address;
+                    *ss >> std::hex >> address;
                     unsigned short accessSize = FromString<unsigned short>(cmd[2].c_str());
 
                     if (insn.compare("store") == 0) {
-                        int value = FromString<int>(cmd[3].c_str());
-                        store(address,accessSize,value);
+                        int value;
+                        delete ss;
+                        ss = new std::istringstream(cmd[3]);
+                        *ss >> std::hex >> value;
+
+                        if (store(address,accessSize,value)) {
+                            // TODO retrieve previous value??
+                            std::cout << "store hit " << std::endl;
+                        } else {
+                            std::cout << "store miss" << std::endl;
+                        }
                     } else if (insn.compare("load")) {
                         load(address,accessSize);
                     }
@@ -66,44 +78,63 @@ void Cache::exec()
     }
 }
 
-void Cache::initSets() {
-    for (int i = 0; i < _numSets; i++) {
-        Index si;
-        si.V = 0;
-        si.d = 0;
+void Cache::init() {
+    // Initialize sets to null (add all slots)
+    for (int i = 0; i < _numSets; ++i) {
+        for (int j = 0; j < _associativity; ++j) {
+            Index si;
+            si.V = 0;
+            si.d = 0;
 
-        // Insert set number (offset past block-offset)
-        // Calculate widths of each field
-        unsigned short OFFWIDTH = log(_blockSize)/log(2);
-        unsigned short SETWIDTH = log(_numSets)/log(2);
-        unsigned short TAGWIDTH = BUSWIDTH-OFFWIDTH-SETWIDTH;
+            // Initialize set field
+            si.fields = (i << OFFWIDTH) & (SET_BITMASK);    // shift and mask
 
-        // Bitmask so only SET can be modified (just in case)
-        int BITMASK = ~(0xffffffff & (0x0 << OFFWIDTH + SETWIDTH));
-        si.fields = (i << OFFWIDTH) & (BITMASK);    // shift and mask
-
-        // Add invalid slot to set's queue
-        sets[i].push_back(si);
+            // Add invalid slot to set's queue
+            sets[i].push_front(si);
+        }
     }
+
+    // zero out cacheMem
+    // Doesn't really matter
+    std::fill_n(cacheMem,_cacheSize*1024,0);
 }
 
 const bool Cache::store(unsigned int address, unsigned short accessSize, int value)
 {
-    std::deque<Index> s = sets[address % _numSets];
-    // Pop oldest index
-    Index si = s.front();
-    s.pop_front();
+    std::list<Index> &s = sets[address % _numSets];
+
+    // Get most significant bits
+    uint32_t tag = address & TAG_BITMASK;
+
+    Index si;
+    bool hit = false;
+
+    // Look for matching tag
+    std::list<Index>::iterator it;
+    for (it = s.begin(); it != s.end(); ++it) {
+        si = *it;    // Set to last iterator
+        // XOR to find match
+        if ((tag ^ (si.fields & TAG_BITMASK)) == 0) {
+            hit = true;
+            break;
+        }
+    }
+
+    // Remove current or last element
+    s.erase((hit) ? it : --it);
+
+    uint32_t set = si.fields & SET_BITMASK;
+    uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
 
     // Process index
+    si.d = hit and si.V; // set dirty flag if already in cache and valid
     si.V = true;
-    si.d = false;
-    // TODO process fields and store in cachemem
-    // TODO check if hit or miss
+    si.fields = 0 + tag + set + offset;
 
-    // Push it back onto queue
-    s.push_back(si);
+    // push to front
+    s.push_front(si);
 
-    return false;
+    return hit and si.V;
 }
 
 const bool Cache::load(unsigned int address, unsigned short accessSize)

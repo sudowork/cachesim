@@ -3,9 +3,10 @@
 
 #include <fstream>
 #include <ostream>
-#include <cinttypes>
-#include <unordered_map>
-#include <deque>
+#include <cstdint>
+//#include <unordered_map>
+#include <list>
+#include <cmath>
 
 #define BUSWIDTH 32
 
@@ -13,12 +14,20 @@ class Cache
 {
     private:
         const char * _filename;
+        std::ifstream _fs;
+        // Different parameters
         const unsigned short _cacheSize,
               _associativity,
               _blockSize,
               _numBlocks,
-              _numSets;
-        std::ifstream _fs;
+              _numSets,
+              OFFWIDTH,
+              SETWIDTH,
+              TAGWIDTH;
+        // 32-bit masks for fields
+        const uint32_t OFF_BITMASK,
+              TAG_BITMASK,
+              SET_BITMASK;
 
         typedef struct
         {
@@ -36,15 +45,17 @@ class Cache
             uint32_t fields;
         } Index;
 
-        typedef struct
+        /*typedef struct
         {
             char* data;
-        } Block;
+        } Block;*/
 
-        std::deque<Index> *sets;
-        std::unordered_map<uint32_t,Block> cacheMem;
+        // array of lists (front of list = most recently used)
+        std::list<Index> *sets;
+        char * cacheMem;
+        //std::unordered_map<uint32_t,Block> cacheMem;
 
-        void initSets();
+        void init();
 
     public:
         // Constructor/Destructor
@@ -56,13 +67,21 @@ class Cache
                 _blockSize(bs),
                 _numBlocks(cs*1024/bs),
                 _numSets(_numBlocks/a), // Calculate number of sets
-                sets(new std::deque<Index>[_numSets])
+                OFFWIDTH(log(_blockSize)/log(2)),
+                SETWIDTH(log(_numSets)/log(2)),
+                TAGWIDTH(BUSWIDTH-OFFWIDTH-SETWIDTH),
+                OFF_BITMASK(~((0xffffffff >> OFFWIDTH) << OFFWIDTH)),
+                TAG_BITMASK((0xffffffff >> (OFFWIDTH + SETWIDTH)) << (OFFWIDTH + SETWIDTH)),
+                SET_BITMASK(~(0xffffffff & (OFF_BITMASK | TAG_BITMASK))),
+                sets(new std::list<Index>[_numSets]),
+                cacheMem(new char[cs*1024])
         {
-            initSets();
+            init();
         };
         ~Cache()
         {
             delete[] sets;
+            delete[] cacheMem;
             // Close file handler
             if (_fs.is_open()) _fs.close();
         };
