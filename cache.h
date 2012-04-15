@@ -5,7 +5,7 @@
 #include <ostream>
 #include <cinttypes>
 #include <unordered_map>
-#include <queue>
+#include <deque>
 
 #define BUSWIDTH 32
 
@@ -41,7 +41,7 @@ class Cache
             char* data;
         } Block;
 
-        std::queue<Index> *sets;
+        std::deque<Index> *sets;
         std::unordered_map<uint32_t,Block> cacheMem;
 
         void initSets();
@@ -56,7 +56,7 @@ class Cache
                 _blockSize(bs),
                 _numBlocks(cs*1024/bs),
                 _numSets(_numBlocks/a), // Calculate number of sets
-                sets(new std::queue<Index>[_numSets])
+                sets(new std::deque<Index>[_numSets])
         {
             initSets();
         };
@@ -77,8 +77,8 @@ class Cache
         const bool loadFile();
         const bool loadFile(const char * f);
         void exec();
-        const bool store(int address, unsigned short accessSize, int value);
-        const bool load(int address, unsigned short accessSize);
+        const bool store(unsigned int address, unsigned short accessSize, int value);
+        const bool load(unsigned int address, unsigned short accessSize);
 
 
 };

@@ -45,7 +45,7 @@ void Cache::exec()
                     std::string insn = cmd[0];
                     std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
-                    int address = FromString<int>(cmd[1].c_str());
+                    unsigned int address = FromString<unsigned int>(cmd[1].c_str());
                     unsigned short accessSize = FromString<unsigned short>(cmd[2].c_str());
 
                     if (insn.compare("store") == 0) {
@@ -83,16 +83,30 @@ void Cache::initSets() {
         si.fields = (i << OFFWIDTH) & (BITMASK);    // shift and mask
 
         // Add invalid slot to set's queue
-        sets[i].push(si);
+        sets[i].push_back(si);
     }
 }
 
-const bool Cache::store(int address, unsigned short accessSize, int value)
+const bool Cache::store(unsigned int address, unsigned short accessSize, int value)
 {
+    std::deque<Index> s = sets[address % _numSets];
+    // Pop oldest index
+    Index si = s.front();
+    s.pop_front();
+
+    // Process index
+    si.V = true;
+    si.d = false;
+    // TODO process fields and store in cachemem
+    // TODO check if hit or miss
+
+    // Push it back onto queue
+    s.push_back(si);
+
     return false;
 }
 
-const bool Cache::load(int address, unsigned short accessSize)
+const bool Cache::load(unsigned int address, unsigned short accessSize)
 {
     return false;
 }
