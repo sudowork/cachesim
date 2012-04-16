@@ -66,7 +66,7 @@ void Cache::exec()
                         }
                     } else if (insn.compare("load") == 0) {
                         CacheResult cr = load(address,accessSize);
-                        if (cr.value) {
+                        if (cr.hit) {
                             std::cout << "load hit " << std::hex << cr.value << std::endl;
                         } else {
                             std::cout << "load miss" << std::endl;
@@ -135,7 +135,7 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
     it = (cr.hit) ? it : --it;
     Index toRemove = *it;
     if (toRemove.V && toRemove.d) {
-        int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
+        unsigned int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
         // Has been modified
         // So retrieve from cacheMem and write-back
         uint32_t cmoffset =
@@ -228,7 +228,7 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
 
     // write value to blocks in cacheMem
     uint32_t absOffset = ((si.fields & SET_BITMASK) >> OFFWIDTH)*_associativity;
-    int decodedTag = (si.fields & ~OFF_BITMASK) >> OFFWIDTH;
+    unsigned int decodedTag = (si.fields & ~OFF_BITMASK) >> OFFWIDTH;
     if (mainMem->count(decodedTag) > 0) {
         char * retrieved = mainMem->at(decodedTag);
         std::copy(retrieved,retrieved+_blockSize,cacheMem+absOffset);
