@@ -79,6 +79,8 @@ class Cache
 
         void init();
 
+        const int getFromCache(const int set, const int offset);
+
     public:
         // Constructor/Destructor
         Cache(const char * f, const unsigned short cs,
@@ -119,8 +121,8 @@ class Cache
         const bool loadFile();
         const bool loadFile(const char * f);
         void exec();
-        const bool store(unsigned int address, unsigned short accessSize, int value);
-        const bool load(unsigned int address, unsigned short accessSize);
+        CacheResult store(unsigned int address, unsigned short accessSize, int value);
+        CacheResult load(unsigned int address, unsigned short accessSize);
         // TODO refactor store and load togther
         // inCache()
         // removeFromCache()

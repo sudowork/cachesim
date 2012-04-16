@@ -58,15 +58,16 @@ void Cache::exec()
                         ss = new std::istringstream(cmd[3]);
                         *ss >> std::hex >> value;
 
-                        // TODO change return to CacheReturn
-                        if (store(address,accessSize,value)) {
-                            std::cout << "store hit " << std::endl;
+                        CacheResult cr = store(address,accessSize,value);
+                        if (cr.hit) {
+                            std::cout << "store hit " << std::hex << cr.value << std::endl;
                         } else {
                             std::cout << "store miss" << std::endl;
                         }
                     } else if (insn.compare("load") == 0) {
-                        if (load(address,accessSize)) {
-                            std::cout << "load hit " << std::endl;
+                        CacheResult cr = load(address,accessSize);
+                        if (cr.value) {
+                            std::cout << "load hit " << std::hex << cr.value << std::endl;
                         } else {
                             std::cout << "load miss" << std::endl;
                         }
@@ -104,7 +105,7 @@ void Cache::init() {
     std::fill_n(cacheMem,_cacheSize*1024,0);
 }
 
-const bool Cache::store(unsigned int address, unsigned short accessSize, int value)
+Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize, int value)
 {
     std::list<Index> &s = sets[address % _numSets];
 
@@ -112,22 +113,26 @@ const bool Cache::store(unsigned int address, unsigned short accessSize, int val
     uint32_t tag = address & TAG_BITMASK;
 
     Index si;
-    bool hit = false;
+    CacheResult cr;
+    cr.hit = false;
+    cr.value = 0x0;
 
     // Look for matching tag
     std::list<Index>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
         // XOR to find match
-        if ((tag ^ (si.fields & TAG_BITMASK)) == 0) {
-            hit = true;
+        if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
+            cr.hit = true;
+            // Pass in set and offset
+            cr.value = this->getFromCache((si.fields & SET_BITMASK) >> OFFWIDTH,(si.fields & OFF_BITMASK));
             break;
         }
     }
 
     // Remove current or last element
     // and write-back
-    it = (hit) ? it : --it;
+    it = (cr.hit) ? it : --it;
     Index toRemove = *it;
     if (toRemove.V && toRemove.d) {
         int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
@@ -148,9 +153,9 @@ const bool Cache::store(unsigned int address, unsigned short accessSize, int val
     uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
 
     // Process index
-    si.d = hit && si.V; // set dirty flag if already in cache and valid
+    si.d = cr.hit; // set dirty flag if already in cache and valid
     si.V = true;
-    si.fields = 0 + tag + set + offset;
+    si.fields = 0x0 + tag + set + offset;
 
     // push to front
     s.push_front(si);
@@ -160,15 +165,15 @@ const bool Cache::store(unsigned int address, unsigned short accessSize, int val
         (((si.fields & SET_BITMASK) >> OFFWIDTH)*_associativity)
         + (si.fields & OFF_BITMASK);
     for (int i = 0; i < accessSize; i++) {
-        int shamt = i*sizeof(char);
+        unsigned short shamt = i*8;
         uint32_t mask = 0xff << shamt;
         cacheMem[absOffset+i] = (value & mask) >> shamt;
     }
 
-    return hit && si.V;
+    return cr;
 }
 
-const bool Cache::load(unsigned int address, unsigned short accessSize)
+Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
 {
     std::list<Index> &s = sets[address % _numSets];
 
@@ -176,16 +181,19 @@ const bool Cache::load(unsigned int address, unsigned short accessSize)
     uint32_t tag = address & TAG_BITMASK;
 
     Index si;
-    bool hit = false;
+    CacheResult cr;
+    cr.hit = false;
+    cr.value = 0x0;
 
     // Look for matching tag
     std::list<Index>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
         // XOR to find match
-        if ((tag ^ (si.fields & TAG_BITMASK)) == 0) {
-            hit = true;
-            return hit;
+        if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
+            cr.hit = true;
+            cr.value = this->getFromCache((si.fields & SET_BITMASK) >> OFFWIDTH,(si.fields & OFF_BITMASK));
+            return cr;
         }
     }
 
@@ -211,9 +219,9 @@ const bool Cache::load(unsigned int address, unsigned short accessSize)
     uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
 
     // Process index
-    si.d = hit && si.V; // set dirty flag if already in cache and valid
+    si.d = false; // ?
     si.V = true;
-    si.fields = 0 + tag + set + offset;
+    si.fields = 0x0 + tag + set + offset;
 
     // push to front
     s.push_front(si);
@@ -226,7 +234,16 @@ const bool Cache::load(unsigned int address, unsigned short accessSize)
         std::copy(retrieved,retrieved+_blockSize,cacheMem+absOffset);
     }
 
-    return hit;
+    return cr;  // cr.hit = false;
+}
+
+const int Cache::getFromCache(const int set, const int offset)
+{
+    int ret = 0x0;
+    for (int i = 0; i < _blockSize-offset; ++i) {
+        ret += cacheMem[set*_associativity+offset+i] << (i*8);
+    }
+    return ret;
 }
 
 const unsigned short Cache::getCacheSize() const
