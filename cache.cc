@@ -129,7 +129,7 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
 
     // Look for matching tag
     // TODO refactor this into a isInSet method
-    std::list<Index> &s = sets[(address % _blockSize) % _numSets];  // (Block number) % numsets
+    std::list<Index> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
     std::list<Index>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
@@ -178,7 +178,7 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
     cr.value = 0x0;
 
     // Look for matching tag
-    std::list<Index> &s = sets[(address % _blockSize) % _numSets];  // (Block number) % numsets
+    std::list<Index> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
     std::list<Index>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
