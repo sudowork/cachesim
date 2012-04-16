@@ -241,7 +241,9 @@ const int Cache::getFromCache(const int set, const int offset)
 {
     int ret = 0x0;
     for (int i = 0; i < _blockSize-offset; ++i) {
-        ret += cacheMem[set*_associativity+offset+i] << (i*8);
+        int currByte = *(cacheMem+set*_associativity+offset+i);
+        currByte &= 0xff;
+        ret |= currByte << (i*8);
     }
     return ret;
 }
