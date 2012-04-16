@@ -237,7 +237,7 @@ void Cache::popIndex(std::list<Index> &s, std::list<Index>::iterator &it)
         // So retrieve from cacheMem and write-back
         uint32_t cmoffset =
             (((toRemove.fields & SET_BITMASK) >> OFFWIDTH)*_associativity);
-        char * retrieved;
+        char * retrieved = new char[_blockSize];
         std::copy(cacheMem+cmoffset,cacheMem+cmoffset+_blockSize,retrieved);
 
         // overwrite previous data
