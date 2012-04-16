@@ -60,14 +60,18 @@ void Cache::exec()
 
                         CacheResult cr = store(address,accessSize,value);
                         if (cr.hit) {
-                            std::cout << "store hit " << std::hex << cr.value << std::endl;
+                            std::cout << "store hit ";
+                            util::padHex(std::cout,cr.value,accessSize*2);
+                            std::cout << std::endl;
                         } else {
                             std::cout << "store miss" << std::endl;
                         }
                     } else if (insn.compare("load") == 0) {
                         CacheResult cr = load(address,accessSize);
                         if (cr.hit) {
-                            std::cout << "load hit " << std::hex << cr.value << std::endl;
+                            std::cout << "load hit ";
+                            util::padHex(std::cout,cr.value,accessSize*2);
+                            std::cout << std::endl;
                         } else {
                             std::cout << "load miss" << std::endl;
                         }

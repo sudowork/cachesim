@@ -2,6 +2,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include <iomanip>
 #include "cache.h"
 #include "util.h"
 
@@ -30,4 +31,10 @@ std::ostream& util::operator<< (std::ostream& out, const Cache& c)
     out << "# Blocks: " << c.getNumBlocks() << std::endl;
     out << "# Sets: " << c.getNumSets();
     return out;
+}
+
+void util::padHex(std::ostream& out, int val, int width)
+{
+    out << std::setfill('0') << std::setw(width) << std::hex << val;
+    return;
 }
