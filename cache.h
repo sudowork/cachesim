@@ -80,6 +80,9 @@ class Cache
         void init();
 
         const int getFromCache(const int set, const int offset);
+        void writeToCache(const int set, const int offset, const int value);
+        void writeToCache(const int set, const int offset, char * value);
+        void popIndex(std::list<Index> &s, std::list<Index>::iterator &it);
 
     public:
         // Constructor/Destructor
