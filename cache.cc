@@ -55,11 +55,14 @@ void Cache::exec()
 
                     // Check for commands manually
                     if (insn.compare("store") == 0) {
-                        // Convert hex string of value to int
-                        int value;
-                        delete ss;
-                        ss = new std::istringstream(cmd[3]);
-                        *ss >> std::hex >> value;
+                        // Convert hex srting to value buffer [MSB->LSB]
+                        char * value = new char[accessSize];
+                        for (int i = 0; i < accessSize; i++) {
+                            char * hexbyte = new char[2];
+                            hexbyte[0] = cmd[3][i*2];
+                            hexbyte[1] = cmd[3][i*2+1];
+                            value[i] = std::strtoul(hexbyte,0,16);
+                        }
 
                         // Attempt to store
                         CacheResult cr = store(address,accessSize,value);
@@ -120,7 +123,7 @@ void Cache::init() {
     }
 }
 
-Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize, int value)
+Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize, char * value)
 {
     // Instantiate slot and return value
     Slot si;
@@ -157,7 +160,7 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
     si.d = cr.hit; // set dirty flag if already in cache and valid
     si.V = true;
     si.fields = address;
-    this->writeToCache(value,si.data,accessSize,blockOffset);   // write new data
+    std::copy(value,value+accessSize,si.data+blockOffset);
 
     // push to front (most recently used)
     s.push_front(si);
@@ -230,15 +233,6 @@ void Cache::popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it)
     }
     s.erase(it);
     return;
-}
-
-void Cache::writeToCache(const int value, char * cacheBlock, const unsigned short accessSize, const unsigned short offset)
-{
-    for (int i = 0; i < accessSize; i++) {
-        unsigned short shamt = (accessSize-1-i)*8;
-        uint32_t mask = 0xff << shamt;
-        cacheBlock[offset+i] = ((value & mask) >> shamt);
-    }
 }
 
 const unsigned short Cache::getCacheSize() const

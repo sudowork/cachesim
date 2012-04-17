@@ -81,7 +81,6 @@ class Cache
         void init();
 
         void popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it);
-        void writeToCache(const int value, char * cacheBlock, const unsigned short accessSize, const unsigned short offset);
 
     public:
         // Constructor/Destructor
@@ -121,7 +120,7 @@ class Cache
         const bool loadFile();
         const bool loadFile(const char * f);
         void exec();
-        CacheResult store(unsigned int address, unsigned short accessSize, int value);
+        CacheResult store(unsigned int address, unsigned short accessSize, char* value);
         CacheResult load(unsigned int address, unsigned short accessSize);
         // TODO refactor store and load togther
         // inCache()
