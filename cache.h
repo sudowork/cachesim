@@ -81,7 +81,7 @@ class Cache
         void init();
 
         void popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it);
-        void writeToCache(const int value, char * cacheBlock, const unsigned short accessSize);
+        void writeToCache(const int value, char * cacheBlock, const unsigned short accessSize, const unsigned short offset);
 
     public:
         // Constructor/Destructor
