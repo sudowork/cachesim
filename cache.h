@@ -99,7 +99,7 @@ class Cache
         const unsigned short getNumBlocks() const;
         const unsigned short getNumSets() const;
 
-        const bool loadFile();
+        void loadFile();
         const bool loadFile(const char * f);
         void exec();
         CacheResult store(unsigned int address, unsigned short accessSize, char* value);

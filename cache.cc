@@ -11,9 +11,9 @@
 #include "util.h"
 #include "cache.h"
 
-const bool Cache::loadFile()
+void Cache::loadFile()
 {
-    return loadFile(_filename);
+    if (!loadFile(_filename)) exit(1);
 }
 
 const bool Cache::loadFile(const char* filename)
@@ -21,6 +21,7 @@ const bool Cache::loadFile(const char* filename)
     // Open file stream to read file
     try {
         _fs.open(filename);
+        if (_fs == NULL) throw 20;
         return true;
     } catch (int e) {
         std::cout << "Error (" << e << ") opening file `" << filename << "`" << std::endl;
@@ -89,7 +90,7 @@ void Cache::exec()
                     } else if (insn.compare("//") == 0) {
                         std::cout << line << std::endl;
                     } else {
-                        throw 30;   // invalid command
+                        std::cout << "Invalid Command" << std::endl;
                     }
                 } catch (int e) {
                     std::cout << "Invalid tracefile command" << std::endl;
@@ -99,7 +100,7 @@ void Cache::exec()
         }
     } else {
         std::cerr << "File not open" << std::endl;
-        throw 21;   // File not open
+        exit(1);
     }
 }
 
