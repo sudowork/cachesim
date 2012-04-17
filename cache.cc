@@ -83,6 +83,10 @@ void Cache::exec()
                         } else {
                             std::cout << "load miss" << std::endl;
                         }
+                    } else if (insn.compare("//") == 0) {
+                        std::cout << line << std::endl;
+                    } else {
+                        throw 30;   // invalid command
                     }
                 } catch (int e) {
                     std::cout << "Invalid tracefile command" << std::endl;
@@ -183,12 +187,13 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
             cr.hit = true;
             // Copy value from cache block to return block
             std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
-            return cr;
+            break;
         }
     }
 
-    // Remove last element if miss
-    --it;
+    // Remove current or last element
+    // and write-back
+    it = (cr.hit) ? it : --it;
     this->popSlot(s,it);
 
     // Process index
@@ -196,11 +201,13 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
     si.V = true;
     si.fields = address;
 
-    // load data from memory
-    unsigned int blockNum = address / _blockSize;
-    if (mainMem->count(blockNum) > 0) {
-        char * blockFromMem = mainMem->at(blockNum);
-        std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
+    // load data from memory if not hit
+    if (!cr.hit) {
+        unsigned int blockNum = address / _blockSize;
+        if (mainMem->count(blockNum) > 0) {
+            char * blockFromMem = mainMem->at(blockNum);
+            std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
+        }
     }
 
     // push to front
