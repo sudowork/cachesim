@@ -36,9 +36,9 @@ class Cache
 
         typedef struct
         {
-            /* --------------------------------
-             * |V|d|  TAG  |  SET  |  OFFSET  |
-             * --------------------------------
+            /* -----------------------------------------------------
+             * |V|d|  TAG  |  SET  |  OFFSET  |        DATA        |
+             * -----------------------------------------------------
              *  V (valid) = 1-bit
              *  d (dirty) = 1-bit
              *  TAG = BUSWIDTH-log2(numSets)-log2(blockSize)
@@ -57,26 +57,8 @@ class Cache
             char * value;
         } CacheResult;
 
-        /*typedef struct
-        {
-            char* data;
-        } Block;*/
-
         // array of lists (front of list = most recently used)
         std::list<Slot> *sets;
-        //char * cacheMem;    // Little endian
-        /*
-         * |   ...   |
-         * -----------
-         * |   MSB   |
-         * | BLOCK 1 |
-         * |   LSB   |
-         * -----------
-         * |   MSB   |
-         * | BLOCK 0 |
-         * |   LSB   |
-         * -----------
-         */
 
         void init();
 
@@ -122,10 +104,7 @@ class Cache
         void exec();
         CacheResult store(unsigned int address, unsigned short accessSize, char* value);
         CacheResult load(unsigned int address, unsigned short accessSize);
-        // TODO refactor store and load togther
-        // inCache()
-        // removeFromCache()
-
+        std::list<Slot>::iterator findMatch(std::list<Slot> &s, const uint32_t address, CacheResult &cr, const unsigned short accessSize);
 
 };
 

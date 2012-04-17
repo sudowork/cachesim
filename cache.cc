@@ -134,32 +134,17 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
     // calculate block offset for use later
     const unsigned short blockOffset = address & OFF_BITMASK;
 
-    // Look for matching tag
-    uint32_t tag = address & TAG_BITMASK;
-    // TODO refactor this into a isInSet method
+    // Find match (or get last item if no match)
     std::list<Slot> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
-
-    std::list<Slot>::iterator it;
-    for (it = s.begin(); it != s.end(); ++it) {
-        si = *it;    // Set to last iterator
-        // XOR to find match
-        if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
-            cr.hit = true;
-            // Copy value from cache block to return block
-            std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
-            break;  // break out to maintain as current slot
-        }
-    }
-
-    // Remove current or last element
-    // and write-back
-    it = (cr.hit) ? it : --it;
-    this->popSlot(s,it);
+    std::list<Slot>::iterator it = findMatch(s,address,cr,accessSize);
+    // Get slot to be replaced
+    si = *it;
 
     // Process index
     si.d = true;
     si.V = true;
     si.fields = address;
+    // Update cache data
     std::copy(value,value+accessSize,si.data+blockOffset);
 
     // push to front (most recently used)
@@ -178,26 +163,11 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
     // calculate block offset for use later
     const unsigned short blockOffset = address & OFF_BITMASK;
 
-    // Look for matching tag
-    uint32_t tag = address & TAG_BITMASK;
-    std::list<Slot> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
-
-    std::list<Slot>::iterator it;
-    for (it = s.begin(); it != s.end(); ++it) {
-        si = *it;    // Set to last iterator
-        // XOR to find match
-        if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
-            cr.hit = true;
-            // Copy value from cache block to return block
-            std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
-            break;
-        }
-    }
-
-    // Remove current or last element
-    // and write-back
-    it = (cr.hit) ? it : --it;
-    this->popSlot(s,it);
+    // Find match (or get last item if no match)
+    std::list<Slot> &s = sets[(address / _blockSize) % _numSets];
+    std::list<Slot>::iterator it = findMatch(s,address,cr,accessSize);
+    // Get slot to be replaced
+    si = *it;
 
     // Process index
     si.d = false;
@@ -233,6 +203,33 @@ void Cache::popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it)
     }
     s.erase(it);
     return;
+}
+
+std::list<Cache::Slot>::iterator Cache::findMatch(std::list<Slot> &s, const uint32_t address, CacheResult &cr, const unsigned short accessSize)
+{
+    const unsigned short blockOffset = address & OFF_BITMASK;
+
+    // Look for matching tag
+    uint32_t tag = address & TAG_BITMASK;
+
+    std::list<Slot>::iterator it;
+    for (it = s.begin(); it != s.end(); ++it) {
+        Slot si = *it;    // Set to last iterator
+        // XOR to find match
+        if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
+            cr.hit = true;
+            // Copy value from cache block to return block
+            std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
+            break;
+        }
+    }
+
+    // Remove current or last element
+    // May perform write-back if necessary
+    it = (cr.hit) ? it : --it;
+    this->popSlot(s,it);
+
+    return it;
 }
 
 const unsigned short Cache::getCacheSize() const
