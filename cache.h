@@ -60,12 +60,64 @@ class Cache
         // array of lists (front of list = most recently used)
         std::list<Slot> *sets;
 
+        /**
+         * Initializes the sets to contain n slots, where
+         * the cache is an n-way set-associative cache
+         *
+         * Also initializes cache memory to 0's
+         *
+         * @return void
+         */
         void init();
 
+        /**
+         * Stores a value in cache memory in the appropriate
+         * set and block.
+         *
+         * @return CacheResult which contains a bool for hit
+         *  and a value (0 if miss, cached value if hit)
+         */
+        CacheResult store(unsigned int address, unsigned short accessSize, char* value);
+
+        /**
+         * Loads data from cache, or attempts to fetch from
+         * main memory if cache miss.
+         *
+         * @return CacheResult
+         */
+        CacheResult load(unsigned int address, unsigned short accessSize);
+
+        /**
+         * Removes a slot from a given set. Also checks if 
+         * the slot was marked as dirty. If dirty, then
+         * will write back to mainMemory.
+         *
+         * Side effect is that s will have one less item
+         * and it will be invalidated
+         *
+         * @return void
+         */
         void popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it);
 
+        /**
+         * Either finds a matching tag within a set, or will
+         * return the last item in the set. Calls popSlot
+         * to remove the relevant slot.
+         *
+         * Side effects include setting the CacheResult
+         * hit and value appropriately.
+         *
+         * @return std::list<Slot>::iterator
+         */
+        std::list<Slot>::iterator findMatch(std::list<Slot> &s, const uint32_t address, CacheResult &cr, const unsigned short accessSize);
+
     public:
-        // Constructor/Destructor
+        /**
+         * Cache constructor. Instantiates new cache
+         * based on cache size, associativity, and
+         * block size. Calls init on self after
+         * instiantiating member variables.
+         */
         Cache(const char * f, const unsigned short cs,
                 const unsigned short a, const unsigned short bs)
             :   _filename(f),
@@ -83,11 +135,15 @@ class Cache
                 sets(new std::list<Slot>[_numSets]),
                 mainMem(new std::unordered_map<int,char *>)
         {
-            init();
+            this->init();
         };
+        /**
+         * Cache destructor
+         */
         ~Cache()
         {
             delete[] sets;
+            free(mainMem);
             // Close file handler
             if (_fs.is_open()) _fs.close();
         };
@@ -99,12 +155,36 @@ class Cache
         const unsigned short getNumBlocks() const;
         const unsigned short getNumSets() const;
 
+        /**
+         * Calls loadFile(const char*) with instantiated filename
+         *
+         * Otherwise equivalent to loadFile(_fileName)
+         *
+         * @return void
+         */
         void loadFile();
+
+        /**
+         * Opens a filestream as a member variable _fs
+         *
+         * @return bool true if file is found
+         */
         const bool loadFile(const char * f);
+
+        /**
+         * After tracefile has been loaded with loadFile() call,
+         * exec() loops through the tracefile, decodes the 
+         * instructions (strings to parameters), and calls the
+         * appropriate methods based on the type of instruction.
+         *
+         * Currently supports only store, load, and comments.
+         * 
+         * Comments (lines beginning with "//", excluding leading
+         * whitespace) are printed to STDOUT
+         *
+         * @return void
+         */
         void exec();
-        CacheResult store(unsigned int address, unsigned short accessSize, char* value);
-        CacheResult load(unsigned int address, unsigned short accessSize);
-        std::list<Slot>::iterator findMatch(std::list<Slot> &s, const uint32_t address, CacheResult &cr, const unsigned short accessSize);
 
 };
 

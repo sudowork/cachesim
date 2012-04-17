@@ -1,0 +1,20 @@
+A program designed to simulate a single-\/level, set-\/associative, L\-R\-U cache with a write-\/back and write-\/allocate write policy.
+
+\subsection*{Building}
+
+To build {\ttfamily cachesim}, simply run {\ttfamily make all}. Alternatively, if you need to generate full debug information, then use {\ttfamily make debug}. Use {\ttfamily g++ $>$= 4.\-3} due to use of a C++0x/\-C++11 header file.
+
+\subsection*{Running}
+
+After building, run with the following parameters\-: \begin{DoxyVerb}./cachesim <tracefile> <cache-size> <n-way-associativity> <block-size>\end{DoxyVerb}
+ \subsection*{Tracefile}
+
+The tracefile should contain store and load instructions in the following format\-: \begin{DoxyVerb}store <address in hex> <access size in bytes> <value in hex>
+load <address in hex> <access size>\end{DoxyVerb}
+ For example\-: \begin{DoxyVerb}store 0x1234ab00 2 19ab
+load 0x002a173f 4\end{DoxyVerb}
+ \subsection*{Contributors}
+
+Kevin Gao \mbox{[}kag45\mbox{]}
+
+Oliver Fang \mbox{[}orf2\mbox{]} 

@@ -48,6 +48,7 @@ int main(int argc, const char * argv[])
     c->exec();
 
     // Cleanup
+    delete c;
     return 0;
 }
 

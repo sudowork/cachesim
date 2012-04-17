@@ -3,6 +3,8 @@
 #include <iterator>
 #include <algorithm>
 #include <iomanip>
+#include <functional>
+#include <locale>
 #include "cache.h"
 #include "util.h"
 
@@ -41,4 +43,18 @@ void util::padHex(std::ostream& out, char * val, const int bytes)
         out << std::setfill('0') << std::setw(2) << std::hex << charval;
     }
     return;
+}
+
+std::string &util::trim(std::string &s) {
+        return util::ltrim(util::rtrim(s));
+}
+
+std::string &util::ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+        return s;
+}
+
+std::string &util::rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+        return s;
 }

@@ -1,0 +1,310 @@
+\hypertarget{class_cache}{\section{Cache Class Reference}
+\label{class_cache}\index{Cache@{Cache}}
+}
+
+
+{\ttfamily \#include $<$cache.\-h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_cache_1_1_cache_result}{Cache\-Result}
+\item 
+struct \hyperlink{struct_cache_1_1_slot}{Slot}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_cache_a9bf5d91565ba9b3994e3339b26b04ee7}{Cache} (const char $\ast$f, const unsigned short cs, const unsigned short a, const unsigned short bs)
+\item 
+\hyperlink{class_cache_af8b171a6c49d88d3ba179477484b9d48}{$\sim$\-Cache} ()
+\item 
+const unsigned short \hyperlink{class_cache_a46a3d359f2ff92e839025afb8942165f}{get\-Cache\-Size} () const 
+\item 
+const unsigned short \hyperlink{class_cache_a49477979b9631d543e1a4244d22c7ec3}{get\-Associativity} () const 
+\item 
+const unsigned short \hyperlink{class_cache_a4ae1050bca924134e2fbebe214ac80f3}{get\-Block\-Size} () const 
+\item 
+const unsigned short \hyperlink{class_cache_a7e47fb5e7bbe8beb1a89df0ef716ca56}{get\-Num\-Blocks} () const 
+\item 
+const unsigned short \hyperlink{class_cache_a26879a3e4ab7bb95e96754a3994d860f}{get\-Num\-Sets} () const 
+\item 
+void \hyperlink{class_cache_a8345d091d431c67defbbde74b64cfb2d}{load\-File} ()
+\item 
+const bool \hyperlink{class_cache_abd6cf0aca0bcf68b8e99c69f1323e612}{load\-File} (const char $\ast$f)
+\item 
+void \hyperlink{class_cache_aa9b5d782c479b44358f734ed0be98b30}{exec} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_cache_a9eff392a40b6c8dd333526a7056b49e2}{init} ()
+\item 
+\hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} \hyperlink{class_cache_ac81651199b4de348322ffc2c48a7d2d5}{store} (unsigned int address, unsigned short access\-Size, char $\ast$value)
+\item 
+\hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} \hyperlink{class_cache_ae92ebc23799f54b5daa542a3082f9e3b}{load} (unsigned int address, unsigned short access\-Size)
+\item 
+void \hyperlink{class_cache_a3ead228320f45b541885be05f549ef30}{pop\-Slot} (std\-::list$<$ \hyperlink{struct_cache_1_1_slot}{Slot} $>$ \&s, std\-::list$<$ \hyperlink{struct_cache_1_1_slot}{Slot} $>$\-::iterator \&it)
+\item 
+std\-::list$<$ \hyperlink{struct_cache_1_1_slot}{Slot} $>$\-::iterator \hyperlink{class_cache_ad514dd2063269a11a30eabbd6b65fbf4}{find\-Match} (std\-::list$<$ \hyperlink{struct_cache_1_1_slot}{Slot} $>$ \&s, const uint32\-\_\-t address, \hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} \&cr, const unsigned short access\-Size)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \hyperlink{class_cache_acf6d51e277094078ec2be7982136c4e8}{\-\_\-filename}
+\item 
+std\-::ifstream \hyperlink{class_cache_acf30051e72f4bd049a378a1248036bea}{\-\_\-fs}
+\item 
+const unsigned short \hyperlink{class_cache_a36f90f0287a082a467fab29c442a92e8}{\-\_\-cache\-Size}
+\item 
+const unsigned short \hyperlink{class_cache_aa48d46cd82958c590c84ec1f91dbf261}{\-\_\-associativity}
+\item 
+const unsigned short \hyperlink{class_cache_a4f8fa4061ddaa6bd961564e7ce1ad382}{\-\_\-block\-Size}
+\item 
+const unsigned short \hyperlink{class_cache_aedf1134f3281104ebb38268579a50ce3}{\-\_\-num\-Blocks}
+\item 
+const unsigned short \hyperlink{class_cache_a7f279c793a54d916e233aab499ffb496}{\-\_\-num\-Sets}
+\item 
+const unsigned short \hyperlink{class_cache_aebf8c6225d7fddef09919904808b03d1}{O\-F\-F\-W\-I\-D\-T\-H}
+\item 
+const unsigned short \hyperlink{class_cache_abd79a5c5d61c93a4b9468ba706543bb8}{S\-E\-T\-W\-I\-D\-T\-H}
+\item 
+const unsigned short \hyperlink{class_cache_aac8e43dd87842bf59c9306ca5a2213e9}{T\-A\-G\-W\-I\-D\-T\-H}
+\item 
+const uint32\-\_\-t \hyperlink{class_cache_a6ba6b28609e0f72dbb04101599f99df0}{O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K}
+\item 
+const uint32\-\_\-t \hyperlink{class_cache_acb9d1d9c3659dc0583538d282243591b}{T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K}
+\item 
+const uint32\-\_\-t \hyperlink{class_cache_a06111c36179db89cb21825c59edfb767}{S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K}
+\item 
+std\-::unordered\-\_\-map$<$ int, char $\ast$ $>$ $\ast$ \hyperlink{class_cache_a2c6c646ab22036ab0df36809fa7d5ab1}{main\-Mem}
+\item 
+std\-::list$<$ \hyperlink{struct_cache_1_1_slot}{Slot} $>$ $\ast$ \hyperlink{class_cache_a888e02489d269b8f65271917af3bac57}{sets}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_cache_a9bf5d91565ba9b3994e3339b26b04ee7}{\index{Cache@{Cache}!Cache@{Cache}}
+\index{Cache@{Cache}!Cache@{Cache}}
+\subsubsection[{Cache}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Cache\-::\-Cache} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{f, }
+\item[{const unsigned short}]{cs, }
+\item[{const unsigned short}]{a, }
+\item[{const unsigned short}]{bs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{class_cache_a9bf5d91565ba9b3994e3339b26b04ee7}
+\hyperlink{class_cache}{Cache} constructor. Instantiates new cache based on cache size, associativity, and block size. Calls init on self after instiantiating member variables. \hypertarget{class_cache_af8b171a6c49d88d3ba179477484b9d48}{\index{Cache@{Cache}!$\sim$\-Cache@{$\sim$\-Cache}}
+\index{$\sim$\-Cache@{$\sim$\-Cache}!Cache@{Cache}}
+\subsubsection[{$\sim$\-Cache}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Cache\-::$\sim$\-Cache} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{class_cache_af8b171a6c49d88d3ba179477484b9d48}
+\hyperlink{class_cache}{Cache} destructor 
+
+\subsection{Member Function Documentation}
+\hypertarget{class_cache_aa9b5d782c479b44358f734ed0be98b30}{\index{Cache@{Cache}!exec@{exec}}
+\index{exec@{exec}!Cache@{Cache}}
+\subsubsection[{exec}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf Cache\-::exec} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_cache_aa9b5d782c479b44358f734ed0be98b30}
+After tracefile has been loaded with \hyperlink{class_cache_a8345d091d431c67defbbde74b64cfb2d}{load\-File()} call, \hyperlink{class_cache_aa9b5d782c479b44358f734ed0be98b30}{exec()} loops through the tracefile, decodes the instructions (strings to parameters), and calls the appropriate methods based on the type of instruction.
+
+Currently supports only store, load, and comments.
+
+Comments (lines beginning with \char`\"{}//\char`\"{}, excluding leading whitespace) are printed to S\-T\-D\-O\-U\-T
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\hypertarget{class_cache_ad514dd2063269a11a30eabbd6b65fbf4}{\index{Cache@{Cache}!find\-Match@{find\-Match}}
+\index{find\-Match@{find\-Match}!Cache@{Cache}}
+\subsubsection[{find\-Match}]{\setlength{\rightskip}{0pt plus 5cm}std\-::list$<$ {\bf Cache\-::\-Slot} $>$\-::iterator {\bf Cache\-::find\-Match} (
+\begin{DoxyParamCaption}
+\item[{std\-::list$<$ {\bf Slot} $>$ \&}]{s, }
+\item[{const uint32\-\_\-t}]{address, }
+\item[{{\bf Cache\-Result} \&}]{cr, }
+\item[{const unsigned short}]{access\-Size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_ad514dd2063269a11a30eabbd6b65fbf4}
+Either finds a matching tag within a set, or will return the last item in the set. Calls pop\-Slot to remove the relevant slot.
+
+Side effects include setting the \hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} hit and value appropriately.
+
+\begin{DoxyReturn}{Returns}
+std\-::list$<$\-Slot$>$\-::iterator 
+\end{DoxyReturn}
+\hypertarget{class_cache_a49477979b9631d543e1a4244d22c7ec3}{\index{Cache@{Cache}!get\-Associativity@{get\-Associativity}}
+\index{get\-Associativity@{get\-Associativity}!Cache@{Cache}}
+\subsubsection[{get\-Associativity}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::get\-Associativity} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_cache_a49477979b9631d543e1a4244d22c7ec3}
+\hypertarget{class_cache_a4ae1050bca924134e2fbebe214ac80f3}{\index{Cache@{Cache}!get\-Block\-Size@{get\-Block\-Size}}
+\index{get\-Block\-Size@{get\-Block\-Size}!Cache@{Cache}}
+\subsubsection[{get\-Block\-Size}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::get\-Block\-Size} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_cache_a4ae1050bca924134e2fbebe214ac80f3}
+\hypertarget{class_cache_a46a3d359f2ff92e839025afb8942165f}{\index{Cache@{Cache}!get\-Cache\-Size@{get\-Cache\-Size}}
+\index{get\-Cache\-Size@{get\-Cache\-Size}!Cache@{Cache}}
+\subsubsection[{get\-Cache\-Size}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::get\-Cache\-Size} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_cache_a46a3d359f2ff92e839025afb8942165f}
+\hypertarget{class_cache_a7e47fb5e7bbe8beb1a89df0ef716ca56}{\index{Cache@{Cache}!get\-Num\-Blocks@{get\-Num\-Blocks}}
+\index{get\-Num\-Blocks@{get\-Num\-Blocks}!Cache@{Cache}}
+\subsubsection[{get\-Num\-Blocks}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::get\-Num\-Blocks} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_cache_a7e47fb5e7bbe8beb1a89df0ef716ca56}
+\hypertarget{class_cache_a26879a3e4ab7bb95e96754a3994d860f}{\index{Cache@{Cache}!get\-Num\-Sets@{get\-Num\-Sets}}
+\index{get\-Num\-Sets@{get\-Num\-Sets}!Cache@{Cache}}
+\subsubsection[{get\-Num\-Sets}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::get\-Num\-Sets} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_cache_a26879a3e4ab7bb95e96754a3994d860f}
+\hypertarget{class_cache_a9eff392a40b6c8dd333526a7056b49e2}{\index{Cache@{Cache}!init@{init}}
+\index{init@{init}!Cache@{Cache}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf Cache\-::init} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a9eff392a40b6c8dd333526a7056b49e2}
+Initializes the sets to contain n slots, where the cache is an n-\/way set-\/associative cache
+
+Also initializes cache memory to 0's
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\hypertarget{class_cache_ae92ebc23799f54b5daa542a3082f9e3b}{\index{Cache@{Cache}!load@{load}}
+\index{load@{load}!Cache@{Cache}}
+\subsubsection[{load}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Cache\-::\-Cache\-Result} {\bf Cache\-::load} (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{address, }
+\item[{unsigned short}]{access\-Size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_ae92ebc23799f54b5daa542a3082f9e3b}
+Loads data from cache, or attempts to fetch from main memory if cache miss.
+
+\begin{DoxyReturn}{Returns}
+\hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} 
+\end{DoxyReturn}
+\hypertarget{class_cache_a8345d091d431c67defbbde74b64cfb2d}{\index{Cache@{Cache}!load\-File@{load\-File}}
+\index{load\-File@{load\-File}!Cache@{Cache}}
+\subsubsection[{load\-File}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf Cache\-::load\-File} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_cache_a8345d091d431c67defbbde74b64cfb2d}
+Calls \hyperlink{class_cache_abd6cf0aca0bcf68b8e99c69f1323e612}{load\-File(const char$\ast$)} with instantiated filename
+
+Otherwise equivalent to load\-File(\-\_\-file\-Name)
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\hypertarget{class_cache_abd6cf0aca0bcf68b8e99c69f1323e612}{\index{Cache@{Cache}!load\-File@{load\-File}}
+\index{load\-File@{load\-File}!Cache@{Cache}}
+\subsubsection[{load\-File}]{\setlength{\rightskip}{0pt plus 5cm}const bool {\bf Cache\-::load\-File} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{f}
+\end{DoxyParamCaption}
+)}}\label{class_cache_abd6cf0aca0bcf68b8e99c69f1323e612}
+Opens a filestream as a member variable \-\_\-fs
+
+\begin{DoxyReturn}{Returns}
+bool true if file is found 
+\end{DoxyReturn}
+\hypertarget{class_cache_a3ead228320f45b541885be05f549ef30}{\index{Cache@{Cache}!pop\-Slot@{pop\-Slot}}
+\index{pop\-Slot@{pop\-Slot}!Cache@{Cache}}
+\subsubsection[{pop\-Slot}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf Cache\-::pop\-Slot} (
+\begin{DoxyParamCaption}
+\item[{std\-::list$<$ {\bf Slot} $>$ \&}]{s, }
+\item[{std\-::list$<$ {\bf Slot} $>$\-::iterator \&}]{it}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a3ead228320f45b541885be05f549ef30}
+Removes a slot from a given set. Also checks if the slot was marked as dirty. If dirty, then will write back to main\-Memory.
+
+Side effect is that s will have one less item and it will be invalidated
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\hypertarget{class_cache_ac81651199b4de348322ffc2c48a7d2d5}{\index{Cache@{Cache}!store@{store}}
+\index{store@{store}!Cache@{Cache}}
+\subsubsection[{store}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Cache\-::\-Cache\-Result} {\bf Cache\-::store} (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{address, }
+\item[{unsigned short}]{access\-Size, }
+\item[{char $\ast$}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_ac81651199b4de348322ffc2c48a7d2d5}
+Stores a value in cache memory in the appropriate set and block.
+
+\begin{DoxyReturn}{Returns}
+\hyperlink{struct_cache_1_1_cache_result}{Cache\-Result} which contains a bool for hit and a value (0 if miss, cached value if hit) 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_cache_aa48d46cd82958c590c84ec1f91dbf261}{\index{Cache@{Cache}!\-\_\-associativity@{\-\_\-associativity}}
+\index{\-\_\-associativity@{\-\_\-associativity}!Cache@{Cache}}
+\subsubsection[{\-\_\-associativity}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-\_\-associativity}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_aa48d46cd82958c590c84ec1f91dbf261}
+\hypertarget{class_cache_a4f8fa4061ddaa6bd961564e7ce1ad382}{\index{Cache@{Cache}!\-\_\-block\-Size@{\-\_\-block\-Size}}
+\index{\-\_\-block\-Size@{\-\_\-block\-Size}!Cache@{Cache}}
+\subsubsection[{\-\_\-block\-Size}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-\_\-block\-Size}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a4f8fa4061ddaa6bd961564e7ce1ad382}
+\hypertarget{class_cache_a36f90f0287a082a467fab29c442a92e8}{\index{Cache@{Cache}!\-\_\-cache\-Size@{\-\_\-cache\-Size}}
+\index{\-\_\-cache\-Size@{\-\_\-cache\-Size}!Cache@{Cache}}
+\subsubsection[{\-\_\-cache\-Size}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-\_\-cache\-Size}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a36f90f0287a082a467fab29c442a92e8}
+\hypertarget{class_cache_acf6d51e277094078ec2be7982136c4e8}{\index{Cache@{Cache}!\-\_\-filename@{\-\_\-filename}}
+\index{\-\_\-filename@{\-\_\-filename}!Cache@{Cache}}
+\subsubsection[{\-\_\-filename}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ {\bf Cache\-::\-\_\-filename}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_acf6d51e277094078ec2be7982136c4e8}
+\hypertarget{class_cache_acf30051e72f4bd049a378a1248036bea}{\index{Cache@{Cache}!\-\_\-fs@{\-\_\-fs}}
+\index{\-\_\-fs@{\-\_\-fs}!Cache@{Cache}}
+\subsubsection[{\-\_\-fs}]{\setlength{\rightskip}{0pt plus 5cm}std\-::ifstream {\bf Cache\-::\-\_\-fs}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_acf30051e72f4bd049a378a1248036bea}
+\hypertarget{class_cache_aedf1134f3281104ebb38268579a50ce3}{\index{Cache@{Cache}!\-\_\-num\-Blocks@{\-\_\-num\-Blocks}}
+\index{\-\_\-num\-Blocks@{\-\_\-num\-Blocks}!Cache@{Cache}}
+\subsubsection[{\-\_\-num\-Blocks}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-\_\-num\-Blocks}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_aedf1134f3281104ebb38268579a50ce3}
+\hypertarget{class_cache_a7f279c793a54d916e233aab499ffb496}{\index{Cache@{Cache}!\-\_\-num\-Sets@{\-\_\-num\-Sets}}
+\index{\-\_\-num\-Sets@{\-\_\-num\-Sets}!Cache@{Cache}}
+\subsubsection[{\-\_\-num\-Sets}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-\_\-num\-Sets}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a7f279c793a54d916e233aab499ffb496}
+\hypertarget{class_cache_a2c6c646ab22036ab0df36809fa7d5ab1}{\index{Cache@{Cache}!main\-Mem@{main\-Mem}}
+\index{main\-Mem@{main\-Mem}!Cache@{Cache}}
+\subsubsection[{main\-Mem}]{\setlength{\rightskip}{0pt plus 5cm}std\-::unordered\-\_\-map$<$int,char $\ast$$>$$\ast$ {\bf Cache\-::main\-Mem}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a2c6c646ab22036ab0df36809fa7d5ab1}
+\hypertarget{class_cache_a6ba6b28609e0f72dbb04101599f99df0}{\index{Cache@{Cache}!O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K@{O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K}}
+\index{O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K@{O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K}!Cache@{Cache}}
+\subsubsection[{O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K}]{\setlength{\rightskip}{0pt plus 5cm}const uint32\-\_\-t {\bf Cache\-::\-O\-F\-F\-\_\-\-B\-I\-T\-M\-A\-S\-K}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a6ba6b28609e0f72dbb04101599f99df0}
+\hypertarget{class_cache_aebf8c6225d7fddef09919904808b03d1}{\index{Cache@{Cache}!O\-F\-F\-W\-I\-D\-T\-H@{O\-F\-F\-W\-I\-D\-T\-H}}
+\index{O\-F\-F\-W\-I\-D\-T\-H@{O\-F\-F\-W\-I\-D\-T\-H}!Cache@{Cache}}
+\subsubsection[{O\-F\-F\-W\-I\-D\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-O\-F\-F\-W\-I\-D\-T\-H}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_aebf8c6225d7fddef09919904808b03d1}
+\hypertarget{class_cache_a06111c36179db89cb21825c59edfb767}{\index{Cache@{Cache}!S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K@{S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K}}
+\index{S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K@{S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K}!Cache@{Cache}}
+\subsubsection[{S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K}]{\setlength{\rightskip}{0pt plus 5cm}const uint32\-\_\-t {\bf Cache\-::\-S\-E\-T\-\_\-\-B\-I\-T\-M\-A\-S\-K}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a06111c36179db89cb21825c59edfb767}
+\hypertarget{class_cache_a888e02489d269b8f65271917af3bac57}{\index{Cache@{Cache}!sets@{sets}}
+\index{sets@{sets}!Cache@{Cache}}
+\subsubsection[{sets}]{\setlength{\rightskip}{0pt plus 5cm}std\-::list$<${\bf Slot}$>$$\ast$ {\bf Cache\-::sets}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_a888e02489d269b8f65271917af3bac57}
+\hypertarget{class_cache_abd79a5c5d61c93a4b9468ba706543bb8}{\index{Cache@{Cache}!S\-E\-T\-W\-I\-D\-T\-H@{S\-E\-T\-W\-I\-D\-T\-H}}
+\index{S\-E\-T\-W\-I\-D\-T\-H@{S\-E\-T\-W\-I\-D\-T\-H}!Cache@{Cache}}
+\subsubsection[{S\-E\-T\-W\-I\-D\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-S\-E\-T\-W\-I\-D\-T\-H}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_abd79a5c5d61c93a4b9468ba706543bb8}
+\hypertarget{class_cache_acb9d1d9c3659dc0583538d282243591b}{\index{Cache@{Cache}!T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K@{T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K}}
+\index{T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K@{T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K}!Cache@{Cache}}
+\subsubsection[{T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K}]{\setlength{\rightskip}{0pt plus 5cm}const uint32\-\_\-t {\bf Cache\-::\-T\-A\-G\-\_\-\-B\-I\-T\-M\-A\-S\-K}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_acb9d1d9c3659dc0583538d282243591b}
+\hypertarget{class_cache_aac8e43dd87842bf59c9306ca5a2213e9}{\index{Cache@{Cache}!T\-A\-G\-W\-I\-D\-T\-H@{T\-A\-G\-W\-I\-D\-T\-H}}
+\index{T\-A\-G\-W\-I\-D\-T\-H@{T\-A\-G\-W\-I\-D\-T\-H}!Cache@{Cache}}
+\subsubsection[{T\-A\-G\-W\-I\-D\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short {\bf Cache\-::\-T\-A\-G\-W\-I\-D\-T\-H}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}\label{class_cache_aac8e43dd87842bf59c9306ca5a2213e9}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{cache_8h}{cache.\-h}\item 
+\hyperlink{cache_8cc}{cache.\-cc}\end{DoxyCompactItemize}

@@ -13,7 +13,7 @@
 
 void Cache::loadFile()
 {
-    if (!loadFile(_filename)) exit(1);
+    loadFile(_filename);
 }
 
 const bool Cache::loadFile(const char* filename)
@@ -24,83 +24,96 @@ const bool Cache::loadFile(const char* filename)
         if (_fs == NULL) throw 20;
         return true;
     } catch (int e) {
-        std::cout << "Error (" << e << ") opening file `" << filename << "`" << std::endl;
-        return false;
+        std::cout << std::endl
+            << "Error (" << e << ") opening file `" << filename << "`" << std::endl;
+        exit(e);
     }
 }
 
 void Cache::exec()
 {
     // Ensure that file is open
-    if (_fs.is_open()) {
-        while (_fs.good()) {
-            std::string line;
-            getline(_fs,line);
-            if (line.size() > 0) {  // ignore blank lines
-                // Tokenize command
-                std::vector<std::string> cmd = util::splitLine(line, ' ');
+    if (!_fs.is_open()) {
+        std::cout << std::endl << "File not open" << std::endl;
+        exit(21);
+    }
 
-                // TODO command parser?
+    // Loop through lines of file
+    while (_fs.good()) {
+        // Get next line
+        std::string line;
+        getline(_fs,line);
+        line = util::trim(line);
 
-                // Extract common parameters
-                try {
-                    // parse instruction
-                    std::string insn = cmd[0];
-                    std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
+        // ignore blank lines
+        if (line.size() == 0) continue;
 
-                    std::istringstream* ss = new std::istringstream(cmd[1]);
-                    // Convert hex string of address to int
-                    unsigned int address;
-                    *ss >> std::hex >> address;
-                    unsigned short accessSize = FromString<unsigned short>(cmd[2].c_str());
+        // TODO command parser?
+        // Tokenize command
+        std::vector<std::string> cmd = util::splitLine(line, ' ');
 
-                    // Check for commands manually
-                    if (insn.compare("store") == 0) {
-                        // Convert hex srting to value buffer [MSB->LSB]
-                        char * value = new char[accessSize];
-                        for (int i = 0; i < accessSize; i++) {
-                            char * hexbyte = new char[2];
-                            hexbyte[0] = cmd[3][i*2];
-                            hexbyte[1] = cmd[3][i*2+1];
-                            value[i] = std::strtoul(hexbyte,0,16);
-                        }
+        try {
+            // parse instruction
+            std::string insn = cmd[0];
+            std::transform(insn.begin(),insn.end(),insn.begin(),(int(*)(int))std::tolower);   // Convert to lowercase
 
-                        // Attempt to store
-                        CacheResult cr = store(address,accessSize,value);
-
-                        if (cr.hit) {
-                            std::cout << "store hit ";
-                            util::padHex(std::cout,cr.value,accessSize);
-                            std::cout << std::endl;
-                        } else {
-                            std::cout << "store miss" << std::endl;
-                        }
-
-                    } else if (insn.compare("load") == 0) {
-                        // Attempt to load
-                        CacheResult cr = load(address,accessSize);
-
-                        if (cr.hit) {
-                            std::cout << "load hit ";
-                            util::padHex(std::cout,cr.value,accessSize);
-                            std::cout << std::endl;
-                        } else {
-                            std::cout << "load miss" << std::endl;
-                        }
-                    } else if (insn.compare("//") == 0) {
-                        std::cout << line << std::endl;
-                    } else {
-                        std::cout << "Invalid Command" << std::endl;
-                    }
-                } catch (int e) {
-                    std::cout << "Invalid tracefile command" << std::endl;
-                    return;
-                }
+            std::istringstream* ss;
+            unsigned int address;
+            unsigned short accessSize;
+            // Check if appropriate number of parameters are listed
+            if (((insn.compare("store") == 0 || insn.compare("load") == 0)
+                    && cmd.size() >= 3) || insn.compare("//") == 0) {
+                ss = new std::istringstream(cmd[1]);
+                // Convert hex string of address to int
+                *ss >> std::hex >> address;
+                accessSize = FromString<unsigned short>(cmd[2].c_str());
+            } else {
+                throw 30;
             }
+
+            // Check for commands manually
+            if (insn.compare("store") == 0 && cmd.size() == 4) {
+                // Convert hex srting to value buffer [MSB->LSB]
+                char * value = new char[accessSize];
+                for (int i = 0; i < accessSize; i++) {
+                    char * hexbyte = new char[2];
+                    hexbyte[0] = cmd[3][i*2];
+                    hexbyte[1] = cmd[3][i*2+1];
+                    value[i] = std::strtoul(hexbyte,0,16);
+                }
+
+                // Attempt to store
+                CacheResult cr = this->store(address,accessSize,value);
+
+                if (cr.hit) {
+                    std::cout << "store hit ";
+                    util::padHex(std::cout,cr.value,accessSize);
+                    std::cout << std::endl;
+                } else {
+                    std::cout << "store miss" << std::endl;
+                }
+
+            } else if (insn.compare("load") == 0 && cmd.size() == 3) {
+                // Attempt to load
+                CacheResult cr = this->load(address,accessSize);
+
+                if (cr.hit) {
+                    std::cout << "load hit ";
+                    util::padHex(std::cout,cr.value,accessSize);
+                    std::cout << std::endl;
+                } else {
+                    std::cout << "load miss" << std::endl;
+                }
+            } else if (insn.compare("//") == 0) {
+                std::cout << line << std::endl;
+            } else {
+                throw 30;
+            }
+        } catch (int e) {
+            std::cout << std::endl << "Invalid tracefile command:" << std::endl;
+            std::cout << ">" << line << std::endl;
+            exit(e);
         }
-    } else {
-        std::cerr << "File not open" << std::endl;
-        exit(1);
     }
 }
 
@@ -137,7 +150,7 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
 
     // Find match (or get last item if no match)
     std::list<Slot> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
-    std::list<Slot>::iterator it = findMatch(s,address,cr,accessSize);
+    std::list<Slot>::iterator it = this->findMatch(s,address,cr,accessSize);
     // Get slot to be replaced
     si = *it;
 
@@ -166,7 +179,7 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
 
     // Find match (or get last item if no match)
     std::list<Slot> &s = sets[(address / _blockSize) % _numSets];
-    std::list<Slot>::iterator it = findMatch(s,address,cr,accessSize);
+    std::list<Slot>::iterator it = this->findMatch(s,address,cr,accessSize);
     // Get slot to be replaced
     si = *it;
 

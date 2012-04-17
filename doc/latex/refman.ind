@@ -1,0 +1,231 @@
+\begin{theindex}
+
+  \item {$\sim $\discretionary {-}{}{}Cache}
+    \subitem {Cache}, \hyperpage{12}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}associativity}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}block\discretionary {-}{}{}Size}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}cache\discretionary {-}{}{}Size}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}filename}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}fs}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}num\discretionary {-}{}{}Blocks}
+    \subitem {Cache}, \hyperpage{14}
+  \item {\discretionary {-}{}{}\_\discretionary {-}{}{}num\discretionary {-}{}{}Sets}
+    \subitem {Cache}, \hyperpage{14}
+
+  \indexspace
+
+  \item {B\discretionary {-}{}{}U\discretionary {-}{}{}S\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}
+    \subitem {cache.\discretionary {-}{}{}h}, \hyperpage{18}
+
+  \indexspace
+
+  \item {Cache}, \hyperpage{11}
+    \subitem {$\sim $\discretionary {-}{}{}Cache}, \hyperpage{12}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}associativity}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}block\discretionary {-}{}{}Size}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}cache\discretionary {-}{}{}Size}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}filename}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}fs}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}num\discretionary {-}{}{}Blocks}, 
+		\hyperpage{14}
+    \subitem {\discretionary {-}{}{}\_\discretionary {-}{}{}num\discretionary {-}{}{}Sets}, 
+		\hyperpage{14}
+    \subitem {Cache}, \hyperpage{12}
+    \subitem {exec}, \hyperpage{12}
+    \subitem {find\discretionary {-}{}{}Match}, \hyperpage{12}
+    \subitem {get\discretionary {-}{}{}Associativity}, \hyperpage{12}
+    \subitem {get\discretionary {-}{}{}Block\discretionary {-}{}{}Size}, 
+		\hyperpage{13}
+    \subitem {get\discretionary {-}{}{}Cache\discretionary {-}{}{}Size}, 
+		\hyperpage{13}
+    \subitem {get\discretionary {-}{}{}Num\discretionary {-}{}{}Blocks}, 
+		\hyperpage{13}
+    \subitem {get\discretionary {-}{}{}Num\discretionary {-}{}{}Sets}, 
+		\hyperpage{13}
+    \subitem {init}, \hyperpage{13}
+    \subitem {load}, \hyperpage{13}
+    \subitem {load\discretionary {-}{}{}File}, \hyperpage{13}
+    \subitem {main\discretionary {-}{}{}Mem}, \hyperpage{14}
+    \subitem {O\discretionary {-}{}{}F\discretionary {-}{}{}F\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}, 
+		\hyperpage{14}
+    \subitem {O\discretionary {-}{}{}F\discretionary {-}{}{}F\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}, 
+		\hyperpage{14}
+    \subitem {pop\discretionary {-}{}{}Slot}, \hyperpage{13}
+    \subitem {S\discretionary {-}{}{}E\discretionary {-}{}{}T\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}, 
+		\hyperpage{14}
+    \subitem {S\discretionary {-}{}{}E\discretionary {-}{}{}T\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}, 
+		\hyperpage{14}
+    \subitem {sets}, \hyperpage{14}
+    \subitem {store}, \hyperpage{13}
+    \subitem {T\discretionary {-}{}{}A\discretionary {-}{}{}G\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}, 
+		\hyperpage{14}
+    \subitem {T\discretionary {-}{}{}A\discretionary {-}{}{}G\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}, 
+		\hyperpage{14}
+  \item {cache.\discretionary {-}{}{}cc}, \hyperpage{17}
+    \subitem {From\discretionary {-}{}{}String}, \hyperpage{17}
+  \item {cache.\discretionary {-}{}{}h}, \hyperpage{17}
+    \subitem {B\discretionary {-}{}{}U\discretionary {-}{}{}S\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}, 
+		\hyperpage{18}
+    \subitem {From\discretionary {-}{}{}String}, \hyperpage{18}
+  \item {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Cache\discretionary {-}{}{}Result}, 
+		\hyperpage{14}
+    \subitem {hit}, \hyperpage{15}
+    \subitem {value}, \hyperpage{15}
+  \item {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Slot}, 
+		\hyperpage{15}
+    \subitem {d}, \hyperpage{15}
+    \subitem {data}, \hyperpage{15}
+    \subitem {fields}, \hyperpage{15}
+    \subitem {V}, \hyperpage{15}
+  \item {cachesim.\discretionary {-}{}{}cc}, \hyperpage{18}
+    \subitem {From\discretionary {-}{}{}String}, \hyperpage{18}
+    \subitem {main}, \hyperpage{18}
+  \item {cachesim.\discretionary {-}{}{}h}, \hyperpage{18}
+    \subitem {From\discretionary {-}{}{}String}, \hyperpage{19}
+    \subitem {main}, \hyperpage{19}
+
+  \indexspace
+
+  \item {d}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Slot}, 
+		\hyperpage{15}
+  \item {data}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Slot}, 
+		\hyperpage{15}
+
+  \indexspace
+
+  \item {exec}
+    \subitem {Cache}, \hyperpage{12}
+
+  \indexspace
+
+  \item {fields}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Slot}, 
+		\hyperpage{15}
+  \item {find\discretionary {-}{}{}Match}
+    \subitem {Cache}, \hyperpage{12}
+  \item {From\discretionary {-}{}{}String}
+    \subitem {cache.\discretionary {-}{}{}cc}, \hyperpage{17}
+    \subitem {cache.\discretionary {-}{}{}h}, \hyperpage{18}
+    \subitem {cachesim.\discretionary {-}{}{}cc}, \hyperpage{18}
+    \subitem {cachesim.\discretionary {-}{}{}h}, \hyperpage{19}
+
+  \indexspace
+
+  \item {get\discretionary {-}{}{}Associativity}
+    \subitem {Cache}, \hyperpage{12}
+  \item {get\discretionary {-}{}{}Block\discretionary {-}{}{}Size}
+    \subitem {Cache}, \hyperpage{13}
+  \item {get\discretionary {-}{}{}Cache\discretionary {-}{}{}Size}
+    \subitem {Cache}, \hyperpage{13}
+  \item {get\discretionary {-}{}{}Num\discretionary {-}{}{}Blocks}
+    \subitem {Cache}, \hyperpage{13}
+  \item {get\discretionary {-}{}{}Num\discretionary {-}{}{}Sets}
+    \subitem {Cache}, \hyperpage{13}
+
+  \indexspace
+
+  \item {hit}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Cache\discretionary {-}{}{}Result}, 
+		\hyperpage{15}
+
+  \indexspace
+
+  \item {init}
+    \subitem {Cache}, \hyperpage{13}
+
+  \indexspace
+
+  \item {load}
+    \subitem {Cache}, \hyperpage{13}
+  \item {load\discretionary {-}{}{}File}
+    \subitem {Cache}, \hyperpage{13}
+  \item {ltrim}
+    \subitem {util}, \hyperpage{9}
+
+  \indexspace
+
+  \item {main}
+    \subitem {cachesim.\discretionary {-}{}{}cc}, \hyperpage{18}
+    \subitem {cachesim.\discretionary {-}{}{}h}, \hyperpage{19}
+  \item {main\discretionary {-}{}{}Mem}
+    \subitem {Cache}, \hyperpage{14}
+
+  \indexspace
+
+  \item {O\discretionary {-}{}{}F\discretionary {-}{}{}F\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}
+    \subitem {Cache}, \hyperpage{14}
+  \item {O\discretionary {-}{}{}F\discretionary {-}{}{}F\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}
+    \subitem {Cache}, \hyperpage{14}
+  \item {operator$<$$<$}
+    \subitem {util}, \hyperpage{9}
+
+  \indexspace
+
+  \item {pad\discretionary {-}{}{}Hex}
+    \subitem {util}, \hyperpage{9}
+  \item {pop\discretionary {-}{}{}Slot}
+    \subitem {Cache}, \hyperpage{13}
+
+  \indexspace
+
+  \item {R\discretionary {-}{}{}E\discretionary {-}{}{}A\discretionary {-}{}{}D\discretionary {-}{}{}M\discretionary {-}{}{}E.\discretionary {-}{}{}md}, 
+		\hyperpage{19}
+  \item {rtrim}
+    \subitem {util}, \hyperpage{9}
+
+  \indexspace
+
+  \item {S\discretionary {-}{}{}E\discretionary {-}{}{}T\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}
+    \subitem {Cache}, \hyperpage{14}
+  \item {S\discretionary {-}{}{}E\discretionary {-}{}{}T\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}
+    \subitem {Cache}, \hyperpage{14}
+  \item {sets}
+    \subitem {Cache}, \hyperpage{14}
+  \item {split\discretionary {-}{}{}Line}
+    \subitem {util}, \hyperpage{9}
+  \item {store}
+    \subitem {Cache}, \hyperpage{13}
+
+  \indexspace
+
+  \item {T\discretionary {-}{}{}A\discretionary {-}{}{}G\discretionary {-}{}{}\_\discretionary {-}{}{}\discretionary {-}{}{}B\discretionary {-}{}{}I\discretionary {-}{}{}T\discretionary {-}{}{}M\discretionary {-}{}{}A\discretionary {-}{}{}S\discretionary {-}{}{}K}
+    \subitem {Cache}, \hyperpage{14}
+  \item {T\discretionary {-}{}{}A\discretionary {-}{}{}G\discretionary {-}{}{}W\discretionary {-}{}{}I\discretionary {-}{}{}D\discretionary {-}{}{}T\discretionary {-}{}{}H}
+    \subitem {Cache}, \hyperpage{14}
+  \item {trim}
+    \subitem {util}, \hyperpage{9}
+
+  \indexspace
+
+  \item {util}, \hyperpage{9}
+    \subitem {ltrim}, \hyperpage{9}
+    \subitem {operator$<$$<$}, \hyperpage{9}
+    \subitem {pad\discretionary {-}{}{}Hex}, \hyperpage{9}
+    \subitem {rtrim}, \hyperpage{9}
+    \subitem {split\discretionary {-}{}{}Line}, \hyperpage{9}
+    \subitem {trim}, \hyperpage{9}
+  \item {util.\discretionary {-}{}{}cc}, \hyperpage{19}
+  \item {util.\discretionary {-}{}{}h}, \hyperpage{19}
+
+  \indexspace
+
+  \item {V}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Slot}, 
+		\hyperpage{15}
+  \item {value}
+    \subitem {Cache\discretionary {-}{}{}::\discretionary {-}{}{}Cache\discretionary {-}{}{}Result}, 
+		\hyperpage{15}
+
+\end{theindex}
