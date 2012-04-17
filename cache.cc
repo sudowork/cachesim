@@ -157,7 +157,7 @@ Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize,
     this->popSlot(s,it);
 
     // Process index
-    si.d = cr.hit; // set dirty flag if already in cache and valid
+    si.d = true;
     si.V = true;
     si.fields = address;
     std::copy(value,value+accessSize,si.data+blockOffset);
@@ -225,11 +225,11 @@ void Cache::popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it)
     if (toRemove.V && toRemove.d) {
         int blockNumber = toRemove.fields / _blockSize;
         // Check if dirty; write-back if necessary
-        if (toRemove.d) {
-            // overwrite previous data
-            std::pair<int,char *> p = std::make_pair(blockNumber,toRemove.data);
-            mainMem->insert(p);
-        }
+        // overwrite previous data
+        char * newData = new char[_blockSize];  // separate cachemem from mainmem
+        std::copy(toRemove.data,toRemove.data+_blockSize,newData);
+        std::pair<int,char *> p = std::make_pair(blockNumber,newData);
+        mainMem->insert(p);
     }
     s.erase(it);
     return;
