@@ -33,8 +33,12 @@ std::ostream& util::operator<< (std::ostream& out, const Cache& c)
     return out;
 }
 
-void util::padHex(std::ostream& out, int val, int width)
+void util::padHex(std::ostream& out, char * val, const int bytes)
 {
-    out << std::setfill('0') << std::setw(width) << std::hex << val;
+    for (int i = 0; i < bytes; i++) {
+        uint32_t charval = static_cast<unsigned int>(val[i]);
+        charval &= 0xff;
+        out << std::setfill('0') << std::setw(2) << std::hex << charval;
+    }
     return;
 }

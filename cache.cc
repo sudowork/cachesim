@@ -66,7 +66,7 @@ void Cache::exec()
 
                         if (cr.hit) {
                             std::cout << "store hit ";
-                            util::padHex(std::cout,cr.value,accessSize*2);
+                            util::padHex(std::cout,cr.value,accessSize);
                             std::cout << std::endl;
                         } else {
                             std::cout << "store miss" << std::endl;
@@ -78,7 +78,7 @@ void Cache::exec()
 
                         if (cr.hit) {
                             std::cout << "load hit ";
-                            util::padHex(std::cout,cr.value,accessSize*2);
+                            util::padHex(std::cout,cr.value,accessSize);
                             std::cout << std::endl;
                         } else {
                             std::cout << "load miss" << std::endl;
@@ -100,182 +100,142 @@ void Cache::init() {
     // Initialize sets to null (add all slots)
     for (int i = 0; i < _numSets; ++i) {
         for (int j = 0; j < _associativity; ++j) {
-            Index si;
+            Slot si;
             si.V = 0;
             si.d = 0;
 
             // Initialize set field
             si.fields = (i << OFFWIDTH) & (SET_BITMASK);    // shift and mask
 
+            // Initialize cache mem to 0
+            si.data = new char[_blockSize];
+
             // Add invalid slot to set's queue
             sets[i].push_front(si);
         }
     }
-
-    // zero out cacheMem
-    // Doesn't really matter
-    std::fill_n(cacheMem,_cacheSize*1024,0);
 }
 
 Cache::CacheResult Cache::store(unsigned int address, unsigned short accessSize, int value)
 {
-    // Get most significant bits
-    uint32_t tag = address & TAG_BITMASK;
-
-    Index si;
+    // Instantiate slot and return value
+    Slot si;
     CacheResult cr;
     cr.hit = false;
-    cr.value = 0x0;
+    cr.value = new char[accessSize];
+
+    // calculate block offset for use later
+    const unsigned short blockOffset = address & OFF_BITMASK;
 
     // Look for matching tag
+    uint32_t tag = address & TAG_BITMASK;
     // TODO refactor this into a isInSet method
-    std::list<Index> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
-    std::list<Index>::iterator it;
+    std::list<Slot> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
+
+    std::list<Slot>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
         // XOR to find match
         if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
             cr.hit = true;
-            // Pass in set and offset
-            cr.value = this->getFromCache((si.fields & SET_BITMASK) >> OFFWIDTH,(si.fields & OFF_BITMASK));
-            break;
+            // Copy value from cache block to return block
+            std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
+            break;  // break out to maintain as current slot
         }
     }
 
     // Remove current or last element
     // and write-back
     it = (cr.hit) ? it : --it;
-    this->popIndex(s,it);
-
-    uint32_t set = si.fields & SET_BITMASK;
-    uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
+    this->popSlot(s,it);
 
     // Process index
     si.d = cr.hit; // set dirty flag if already in cache and valid
     si.V = true;
-    si.fields = 0x0 + tag + set + offset;
+    si.fields = address;
+    this->writeToCache(value,si.data,accessSize);   // write new data
 
-    // push to front
+    // push to front (most recently used)
     s.push_front(si);
-
-    // write value to blocks in cacheMem
-    this->writeToCache(
-            (si.fields & SET_BITMASK) >> OFFWIDTH,
-            (si.fields & OFF_BITMASK),
-            value);
 
     return cr;
 }
 
 Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
 {
-    // Get most significant bits
-    uint32_t tag = address & TAG_BITMASK;
-
-    Index si;
+    Slot si;
     CacheResult cr;
     cr.hit = false;
-    cr.value = 0x0;
+    cr.value = new char[accessSize];
+
+    // calculate block offset for use later
+    const unsigned short blockOffset = address & OFF_BITMASK;
 
     // Look for matching tag
-    std::list<Index> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
-    std::list<Index>::iterator it;
+    uint32_t tag = address & TAG_BITMASK;
+    std::list<Slot> &s = sets[(address / _blockSize) % _numSets];  // (Block number) % numsets
+
+    std::list<Slot>::iterator it;
     for (it = s.begin(); it != s.end(); ++it) {
         si = *it;    // Set to last iterator
         // XOR to find match
         if ((tag ^ (si.fields & TAG_BITMASK)) == 0x0 && si.V) {
             cr.hit = true;
-            cr.value = this->getFromCache((si.fields & SET_BITMASK) >> OFFWIDTH,(si.fields & OFF_BITMASK));
+            // Copy value from cache block to return block
+            std::copy(si.data+blockOffset,si.data+blockOffset+accessSize,cr.value);
             return cr;
         }
     }
 
     // Remove last element if miss
     --it;
-    this->popIndex(s,it);
-
-    uint32_t set = si.fields & SET_BITMASK;
-    uint32_t offset = (_blockSize-accessSize) & OFF_BITMASK;
+    this->popSlot(s,it);
 
     // Process index
-    si.d = false; // ?
+    si.d = false;
     si.V = true;
-    si.fields = 0x0 + tag + set + offset;
+    si.fields = address;
+
+    // load data from memory
+    unsigned int blockNum = address / _blockSize;
+    if (mainMem->count(blockNum) > 0) {
+        char * blockFromMem = mainMem->at(blockNum);
+        std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
+    }
 
     // push to front
     s.push_front(si);
 
-    // write value to blocks in cacheMem (if exists in memory)
-    unsigned int decodedTag = (si.fields & ~OFF_BITMASK) >> OFFWIDTH;
-    if (mainMem->count(decodedTag) > 0) {
-        this->writeToCache(
-                (si.fields & SET_BITMASK) >> OFFWIDTH,
-                (si.fields & OFF_BITMASK),
-                mainMem->at(decodedTag));   // overloaded call
-    }
-
     return cr;  // cr.hit = false;
 }
 
-const int Cache::getFromCache(const int set, const int offset)
+void Cache::popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it)
 {
-    int ret = 0x0;
-    for (int i = 0; i < _blockSize-offset; ++i) {
-        int currByte = *(cacheMem+set*_associativity+offset+i);
-        currByte &= 0xff;
-        ret |= currByte << (i*8);
-    }
-    return ret;
-}
-
-void Cache::popIndex(std::list<Index> &s, std::list<Index>::iterator &it)
-{
-    Index toRemove = *it;
+    Slot toRemove = *it;
     if (toRemove.V && toRemove.d) {
-        int decodedTag = (toRemove.fields & ~OFF_BITMASK) >> OFFWIDTH;
-        // Has been modified
-        // So retrieve from cacheMem and write-back
-        uint32_t cmoffset =
-            (((toRemove.fields & SET_BITMASK) >> OFFWIDTH)*_associativity);
-        char * retrieved = new char[_blockSize];
-        std::copy(cacheMem+cmoffset,cacheMem+cmoffset+_blockSize,retrieved);
-
-        // overwrite previous data
-        std::pair<int,char *> p = std::make_pair(decodedTag,retrieved);
-        mainMem->insert(p);
+        int blockNumber = toRemove.fields / _blockSize;
+        // Check if dirty; write-back if necessary
+        if (toRemove.d) {
+            // overwrite previous data
+            std::pair<int,char *> p = std::make_pair(blockNumber,toRemove.data);
+            mainMem->insert(p);
+        }
     }
     s.erase(it);
     return;
 }
 
-// Write to cache from a store
-void Cache::writeToCache(const int set, const int offset, const int value)
+void Cache::writeToCache(const int value, char * cacheBlock, const unsigned short accessSize)
 {
-    uint32_t absOffset = set*_associativity+offset;
-    for (int i = 0; i < _blockSize-offset; i++) {
-        unsigned short shamt = i*8;
+    // Convert value to char buffer
+    char * valuebuf = new char[accessSize];
+    for (int i = 0; i < accessSize; i++) {
+        unsigned short shamt = (accessSize-1-i)*8;
         uint32_t mask = 0xff << shamt;
-        cacheMem[absOffset+i] = (value & mask) >> shamt;
+        valuebuf[i] = ((value & mask) >> shamt);
     }
-    return;
-}
-
-// Write to cache from a load
-// (using reference to char buffer in main mem)
-void Cache::writeToCache(const int set, const int offset, char * value)
-{
-    uint32_t absOffset = set*_associativity+offset;
-    int i = 0;
-    // increment pointer for up to blockSize (prevent null pointer exception)
-    while (value+i != value+_blockSize) {
-        if (value+i == NULL) {
-            --i;
-            break;
-        }
-        ++i;
-    }
-
-    std::copy(value,value+i,cacheMem+absOffset);
+    // write data to cache
+    std::copy(valuebuf,valuebuf+accessSize,cacheBlock);
 }
 
 const unsigned short Cache::getCacheSize() const

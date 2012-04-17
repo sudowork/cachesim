@@ -48,12 +48,13 @@ class Cache
             bool V;
             bool d;
             uint32_t fields;
-        } Index;
+            char * data;    // block
+        } Slot;
 
         typedef struct
         {
             bool hit;
-            int value;
+            char * value;
         } CacheResult;
 
         /*typedef struct
@@ -62,8 +63,8 @@ class Cache
         } Block;*/
 
         // array of lists (front of list = most recently used)
-        std::list<Index> *sets;
-        char * cacheMem;    // Little endian
+        std::list<Slot> *sets;
+        //char * cacheMem;    // Little endian
         /*
          * |   ...   |
          * -----------
@@ -79,10 +80,8 @@ class Cache
 
         void init();
 
-        const int getFromCache(const int set, const int offset);
-        void writeToCache(const int set, const int offset, const int value);
-        void writeToCache(const int set, const int offset, char * value);
-        void popIndex(std::list<Index> &s, std::list<Index>::iterator &it);
+        void popSlot(std::list<Slot> &s, std::list<Slot>::iterator &it);
+        void writeToCache(const int value, char * cacheBlock, const unsigned short accessSize);
 
     public:
         // Constructor/Destructor
@@ -100,8 +99,7 @@ class Cache
                 OFF_BITMASK(~((0xffffffff >> OFFWIDTH) << OFFWIDTH)),
                 TAG_BITMASK((0xffffffff >> (OFFWIDTH + SETWIDTH)) << (OFFWIDTH + SETWIDTH)),
                 SET_BITMASK(~(0xffffffff & (OFF_BITMASK | TAG_BITMASK))),
-                sets(new std::list<Index>[_numSets]),
-                cacheMem(new char[cs*1024]),
+                sets(new std::list<Slot>[_numSets]),
                 mainMem(new std::unordered_map<int,char *>)
         {
             init();
@@ -109,7 +107,6 @@ class Cache
         ~Cache()
         {
             delete[] sets;
-            delete[] cacheMem;
             // Close file handler
             if (_fs.is_open()) _fs.close();
         };
