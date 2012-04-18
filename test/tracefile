@@ -1,0 +1,28 @@
+// test cases for 32 4 8
+    store 0x1234ab00 2 19ab
+    store 0x1234ab00 2 19ac
+    load 0x002a17f0 2
+    load 0x002a17f0 4
+    load 0x1234ab00 2
+
+// test functionality of storing to different parts of block
+    store 0x00000000 4 12345678
+    store 0x00000002 2 1234
+    store 0x00000004 2 8888
+    store 0x00000006 2 1337
+    load 0x00000000 4
+    store 0x00000008 2 4321
+    load 0x00000001 2
+
+// check that sets are pruning correctly
+    store 0xa0000000 8 1111111111111111
+    store 0xb0000000 4 22222222
+    store 0xc0000000 4 33333333
+    store 0xd0000000 4 44444444
+    load 0xa0000000 8
+    store 0xe0000000 4 55555555
+    load 0xb0000000 4
+    load 0xb0000000 4
+    load 0xd0000000 4
+    load 0xc0000000 4
+    load 0xc0000000 4
