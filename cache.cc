@@ -6,8 +6,8 @@
 #include <iterator>
 #include <algorithm>
 #include <list>
-#include <cstdint>
-#include <unordered_map>
+#include "stdint.h"
+#include <map>
 #include "util.h"
 #include "cache.h"
 
@@ -86,9 +86,9 @@ void Cache::exec()
                 CacheResult cr = this->store(address,accessSize,value);
 
                 if (cr.hit) {
-                    std::cout << "store hit ";
-                    util::padHex(std::cout,cr.value,accessSize);
-                    std::cout << std::endl;
+                    std::cout << "store hit" << std::endl;
+                    //util::padHex(std::cout,cr.value,accessSize);
+                    //std::cout << std::endl;
                 } else {
                     std::cout << "store miss" << std::endl;
                 }
@@ -102,7 +102,9 @@ void Cache::exec()
                     util::padHex(std::cout,cr.value,accessSize);
                     std::cout << std::endl;
                 } else {
-                    std::cout << "load miss" << std::endl;
+                    std::cout << "load miss ";
+                    util::padHex(std::cout,cr.value,accessSize);
+                    std::cout << std::endl;
                 }
             } else if (insn.compare("//") == 0) {
                 std::cout << line << std::endl;
@@ -194,6 +196,7 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
         if (mainMem->count(blockNum) > 0) {
             char * blockFromMem = mainMem->at(blockNum);
             std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
+            cr.value = si.data+blockOffset;
         }
     }
 
