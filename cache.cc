@@ -73,12 +73,15 @@ void Cache::exec()
 
             // Check for commands manually
             if (insn.compare("store") == 0 && cmd.size() == 4) {
+                // strip 0x if there
+                int start = 0;
+                if (cmd[3][0] == '0' && cmd[3][1] == 'x') start = 2;
                 // Convert hex srting to value buffer [MSB->LSB]
                 char * value = new char[accessSize];
                 for (int i = 0; i < accessSize; i++) {
                     char * hexbyte = new char[2];
-                    hexbyte[0] = cmd[3][i*2];
-                    hexbyte[1] = cmd[3][i*2+1];
+                    hexbyte[0] = cmd[3][start+i*2];
+                    hexbyte[1] = cmd[3][start+i*2+1];
                     value[i] = std::strtoul(hexbyte,0,16);
                 }
 
