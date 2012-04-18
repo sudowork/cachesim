@@ -6,8 +6,8 @@
 #include <iterator>
 #include <algorithm>
 #include <list>
-#include <cstdint>
-#include <unordered_map>
+#include "stdint.h"
+#include <map>
 #include "util.h"
 #include "cache.h"
 

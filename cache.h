@@ -3,8 +3,8 @@
 
 #include <fstream>
 #include <ostream>
-#include <cstdint>
-#include <unordered_map>
+#include "stdint.h"
+#include <map>
 #include <list>
 #include <cmath>
 
@@ -32,7 +32,7 @@ class Cache
 
         // main memory
         // TODO separate this out into its own class
-        std::unordered_map<int,char *> * mainMem;
+        std::map<int,char *> * mainMem;
 
         typedef struct
         {
@@ -133,7 +133,7 @@ class Cache
                 TAG_BITMASK((0xffffffff >> (OFFWIDTH + SETWIDTH)) << (OFFWIDTH + SETWIDTH)),
                 SET_BITMASK(~(0xffffffff & (OFF_BITMASK | TAG_BITMASK))),
                 sets(new std::list<Slot>[_numSets]),
-                mainMem(new std::unordered_map<int,char *>)
+                mainMem(new std::map<int,char *>)
         {
             this->init();
         };
@@ -143,7 +143,7 @@ class Cache
         ~Cache()
         {
             delete[] sets;
-            free(mainMem);
+            delete mainMem;
             // Close file handler
             if (_fs.is_open()) _fs.close();
         };
