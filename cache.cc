@@ -198,6 +198,7 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
             std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
             cr.value = si.data+blockOffset;
         }
+        cr.value = si.data+blockOffset;
     }
 
     // push to front
