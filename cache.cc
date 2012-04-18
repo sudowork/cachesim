@@ -196,8 +196,8 @@ Cache::CacheResult Cache::load(unsigned int address, unsigned short accessSize)
         if (mainMem->count(blockNum) > 0) {
             char * blockFromMem = mainMem->at(blockNum);
             std::copy(blockFromMem+blockOffset,blockFromMem+blockOffset+accessSize,si.data+blockOffset);
-            cr.value = si.data+blockOffset;
         }
+        cr.value = si.data+blockOffset;
     }
 
     // push to front
