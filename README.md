@@ -4,7 +4,7 @@ A program designed to simulate a single-level, set-associative, LRU cache with a
 
 Building
 --------
-To build `cachesim`, simply run `make all`. Alternatively, if you need to generate full debug information, then use `make debug`. Use `g++ >= 4.3` due to use of a C++0x/C++11 header file.
+To build `cachesim`, simply run `make all`. Alternatively, if you need to generate full debug information, then use `make debug`. This version has been ported to be compatible with `g++ < 4.3`. It has only been tested to compile using `g++ 4.2.1`, though it should work with earlier versions as well. The functionality of this version has been untested compared to master.
 
 Running
 -------
